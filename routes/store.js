@@ -82,7 +82,7 @@ storeRouter.route('/storesCollection/stores/:location/:pageNo')
 		}
 		console.log(queryObject);
 		Store.paginate(queryObject,
-			{page: req.params.pageNo, limit: 5}, function(err, result) {
+			{page: req.params.pageNo, limit: 35}, function(err, result) {
 		    if(err){
 				res.send(err);
 			}
@@ -125,7 +125,7 @@ storeRouter.route('/storesCollection/storeName/:storeName/:location/:pageNo')
 		}
 
 		Store.paginate(queryObject,
-			{page: req.params.pageNo, limit: 1 }, function(err, result) {
+			{page: req.params.pageNo, limit: 35 }, function(err, result) {
 		    if(err){
 				res.send(err);
 			}
@@ -144,7 +144,7 @@ storeRouter.route('/storesCollection/category/:category/:location/:pageNo')
 				queryObject['address.area']=req.query.area;
 		}
 		Store.paginate(queryObject,
-			{page: req.params.pageNo, limit: 1 }, function(err, result) {
+			{page: req.params.pageNo, limit: 35 }, function(err, result) {
 		    if(err){
 				res.send(err);
 			}
@@ -201,7 +201,7 @@ storeRouter.route('/categories/:pageNo')
 	.get(function(req,res){
 		Store.paginate({
 			/*category: { $in: ['category1'] }*/
-		}, { select:'category', page: req.params.pageNo, limit: 2 }, function(err, result) {
+		}, { select:'category', page: req.params.pageNo, limit: 35 }, function(err, result) {
 		    if(err){
 				res.send(err);
 			}
