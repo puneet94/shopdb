@@ -76,8 +76,8 @@ function redirectIfNotStoreAuthenticated($q,$route,userData,adminStoreService,ch
               console.log(userData.getUser()._id);
               console.log(response);
               if(userData.getUser()._id==response.data.admin){
-                defer.resolve();  
-                
+                defer.resolve();
+
               }
               else{
                 defer.reject();
@@ -86,10 +86,10 @@ function redirectIfNotStoreAuthenticated($q,$route,userData,adminStoreService,ch
             },function(response){
               console.log(response);
             });
-            
+
             return defer.promise;
 }
-          
+
 
 
 (function(angular){
@@ -129,7 +129,7 @@ angular
       $authProvider.signupUrl = "https://shopuae.herokuapp.com/authenticate/signup";
 
       $authProvider.facebook({
-        clientId: '1068203956594250',
+        clientId: '991629147629579',
         url:'https://shopuae.herokuapp.com/authenticate/auth/facebook'
       });
       //$httpProvider.interceptors.push('authInterceptor');
@@ -230,7 +230,7 @@ angular.module('app.store',[]).config(['$routeProvider',
       when('/store', {
         templateUrl: 'app/store/storePost.html',
         controller: 'StoreController',
-        controllerAs: 'sm'  
+        controllerAs: 'sm'
       }).when('/store/storesCollection/storeName/:storeName/:location/:slug?', {
         templateUrl: 'app/store/views/storesNameCollection.html',
         controller: 'StoreNameCollectionController',
@@ -310,10 +310,10 @@ angular.module('app.common')
 			return  gs.searchesData;
 		};
 		this.getAjaxSearches = function(city,userSearchText) {
-   			
+
    			var url = baseUrlService.baseUrl+"search/searches/"+city+'/'+userSearchText;
       		return $http.get(url);
-			
+
 		};
 	}
 	function HttpService($http){
@@ -367,8 +367,8 @@ angular.module('app.common')
 
 		var obj1 =  {
 			setCity: function (city) {
-				
-				
+
+
 				if(city){
 					storage.setItem('city',JSON.stringify(city));
 				}
@@ -402,7 +402,7 @@ angular.module('app.common')
 		this.getCategoriesWithLocation = this.baseUrl + "categories/location";
 
 	}
-	
+
 	function GetCityLocalitiesService($http,baseUrlService){
 		this.getCityLocalities = getCityLocalities;
 		function getCityLocalities(city){
@@ -503,7 +503,7 @@ angular.module('app.common')
             }
         };
     }
-  
+
   function toggleElement($window,$location) {
     return {
       restrict: 'A',
@@ -683,17 +683,17 @@ function loadingDirective() {
   angular.module('app.admin')
 
     .controller('AdminStoreController',['$scope','$routeParams','getSingleStore',AdminStoreController]);
-    function AdminStoreController($scope,$routeParams,getSingleStore){	
+    function AdminStoreController($scope,$routeParams,getSingleStore){
     	var asc = this;
     	getSingleStore.getStore($routeParams.storeId)
     .then(function(res){
-      
+
         asc.storeData = res.data;
-        
+
         //asc.showImagesCarousel = true;
         console.log(asc.storeImagesObj);
         asc.loading = false;
-        
+
       });
     getSingleStore.getStoreRating($routeParams.storeId)
     .then(function(res){
@@ -707,7 +707,7 @@ function loadingDirective() {
 
     .controller('CreateOfferController',[CreateOfferController]);
     function CreateOfferController(){
-    	
+
     }
 })(window.angular);
 
@@ -721,7 +721,7 @@ function loadingDirective() {
         csc.productForm.price = {};
     	activate();
     	csc.createProduct = createProduct;
-        
+
     	function createProduct(){
     		adminProductService.createProduct(csc.productForm,$routeParams.storeId)
 	    		.then(function(response){
@@ -729,12 +729,12 @@ function loadingDirective() {
 	    			alert("product created");
 	    		},function(response){
 	    			console.log(response);
-	    		});	
+	    		});
     	}
-    	
-    	
+
+
     	function activate(){
-    		
+
     	}
     }
 })(window.angular);
@@ -783,11 +783,11 @@ function loadingDirective() {
                 if (response.status > 0)
                     csc.errorMsg = response.status + ': ' + response.data;
             }, function (evt) {
-                file.progress = Math.min(100, parseInt(100.0 * 
+                file.progress = Math.min(100, parseInt(100.0 *
                                          evt.loaded / evt.total));
             });
         });
-        
+
     };
     	function createStore(){
         csc.storeForm.bannerImage = csc.storeForm.storeImages[0];
@@ -797,14 +797,14 @@ function loadingDirective() {
 	    			alert("store created");
 	    		},function(response){
 	    			console.log(response);
-	    		});	
+	    		});
     	}
-    	
-    	
+
+
     	function activate(){
-    		
+
     	}
-    	
+
     }
 })(window.angular);
 
@@ -817,7 +817,7 @@ function loadingDirective() {
     	csc.productForm = {};
     	activate();
     	csc.createProduct = createProduct;
-        
+
     	function createProduct(){
     		adminProductService.updateProduct($routeParams.productId,csc.productForm)
 	    		.then(function(response){
@@ -825,10 +825,10 @@ function loadingDirective() {
 	    			alert("product created");
 	    		},function(response){
 	    			console.log(response);
-	    		});	
+	    		});
     	}
-    	
-    	
+
+
     	function activate(){
     		adminProductService.getProduct($routeParams.productId).then(function(response){
     			console.log(response);
@@ -852,8 +852,8 @@ function loadingDirective() {
     	csc.storeForm = {};
     	activate();
     	csc.createStore = createStore;
-        
-        
+
+
 
         csc.uploadSingleImage = function(file, errFiles) {
           console.log("Enterd file uploading");
@@ -866,7 +866,7 @@ function loadingDirective() {
               });
               csc.spinnerLoading = true;
               file.upload.then(function (response) {
-                  
+
                       file.result = response.data;
                       csc.storeForm.bannerImage = response.data;
                       //$('.userProfileImage').find('img').attr('src',response.data);
@@ -892,11 +892,11 @@ function loadingDirective() {
                 if (response.status > 0)
                     csc.errorMsg = response.status + ': ' + response.data;
             }, function (evt) {
-                file.progress = Math.min(100, parseInt(100.0 * 
+                file.progress = Math.min(100, parseInt(100.0 *
                                          evt.loaded / evt.total));
             });
         });
-        
+
     };
     	function createStore(){
     		adminStoreService.updateStore($routeParams.storeId,csc.storeForm)
@@ -905,10 +905,10 @@ function loadingDirective() {
 	    			alert("store created");
 	    		},function(response){
 	    			console.log(response);
-	    		});	
+	    		});
     	}
-    	
-    	
+
+
     	function activate(){
     		adminStoreService.getStore($routeParams.storeId).then(function(response){
     			console.log(response);
@@ -930,7 +930,7 @@ function loadingDirective() {
 
     .controller('StoreStatisticsController',[StoreStatisticsController]);
     function StoreStatisticsController(){
-    	
+
     }
 })(window.angular);
 
@@ -962,7 +962,7 @@ function AdminProductService($http,baseUrlService,changeBrowserURL){
   	return $http.put(baseUrlService.baseUrl+'admin/product/'+productId,product);
   }
   function getProduct(productId,obj){
-    return $http.get(baseUrlService.baseUrl+'admin/product/'+productId,{params:obj});       
+    return $http.get(baseUrlService.baseUrl+'admin/product/'+productId,{params:obj});
   }
   function deleteProduct(){
 
@@ -998,7 +998,7 @@ function AdminStoreService($http,baseUrlService,changeBrowserURL){
   	return $http.put(baseUrlService.baseUrl+'admin/store/'+storeId,store);
   }
   function getStore(storeId,obj){
-    return $http.get(baseUrlService.baseUrl+'admin/store/'+storeId,{params:obj});       
+    return $http.get(baseUrlService.baseUrl+'admin/store/'+storeId,{params:obj});
   }
   function deleteStore(){
 
@@ -1139,7 +1139,7 @@ angular.module('authModApp')
 		    $auth.signup(rc.user)
 				.then(function(response){
 					console.log(response);
-			    		
+
 			    		$auth.setToken(response.data.token);
 			    		userData.setUser(response.data.user);
 			    		//console.log(userData.getUser());
@@ -1314,7 +1314,7 @@ angular.module('authModApp')
 			phc.authenticate = authenticate;
 			phc.authLogout = authLogout;
 			phc.loginPage = loginPage;
-			
+
 			phc.isAuth = $auth.isAuthenticated();
 
 			function toHomePage(){
@@ -1564,7 +1564,7 @@ function SearchBoxController($scope,$http,$routeParams,cityStorage,citiesService
 
 			}
 			else if(changeEntity == "product"){
-						  
+
 				hm.url = "/productsCollectionName/";
 
 			}
@@ -1580,7 +1580,7 @@ function SearchBoxController($scope,$http,$routeParams,cityStorage,citiesService
 
 			}
 			else if(changeEntity.trim() == "All products in"){
-				
+
 				locationProductsSearchUrl();
 
 			}
@@ -1649,11 +1649,11 @@ function SearchBoxController($scope,$http,$routeParams,cityStorage,citiesService
 
 		}
 		function locationProductsSearchUrl(){
-			
+
 			hm.url = "/productsCollectionLocation";
 			var myLocation = hm.selectedItem;
 			hm.slug = "products-in-" + myLocation;
-			
+
 			changeBrowserURL.changeBrowserURLMethod(hm.url+"/"+myLocation+"/"+hm.slug);
 
 
@@ -1685,7 +1685,7 @@ angular.module('app.user')
       ualc.openMenu = openMenu;
       ualc.getUserPage = getUserPage;
       ualc.getAdminStore = getAdminStore;
-      ualc.createNewStore = createNewStore; 
+      ualc.createNewStore = createNewStore;
       activate();
       function getAdminStore(storeId){
         changeBrowserURL.changeBrowserURLMethod('/admin/adminStorePage/'+storeId);
@@ -1698,14 +1698,14 @@ angular.module('app.user')
 	      $mdOpenMenu(ev);
 		}
       function createNewStore(){
-        changeBrowserURL.changeBrowserURLMethod('/admin/createStore/'); 
+        changeBrowserURL.changeBrowserURLMethod('/admin/createStore/');
       }
 
 
       function activate(){
         ualc.userProfilePic = userData.getUser().picture;
         ualc.userStoresList = userData.getUser().storeId;
-      	
+
       }
   }
 })(window.angular);
@@ -1715,7 +1715,7 @@ angular.module('app.user')
 
     .controller('ProductCategoryCollectionController',[productCategoryCollectionController]);
     function productCategoryCollectionController(){
-    	
+
     }
 })(window.angular);
 
@@ -1750,7 +1750,7 @@ angular.module('app.product')
         var location = $routeParams.location;
         var url ='';
         if($location.absUrl().indexOf("/productsCollectionCategory/")!=-1){
-          var category = $routeParams.category;           
+          var category = $routeParams.category;
            url = 'product/products/category/'+category+'/'+location+'/'+plc.pageNo;
         }
         else if($location.absUrl().indexOf("/productsCollectionSubCategory/")!=-1){
@@ -1762,7 +1762,7 @@ angular.module('app.product')
            url = 'product/products/name/'+productName+'/'+location+'/'+plc.pageNo;
         }
         else if($location.absUrl().indexOf("/productsCollectionLocation/")!=-1){
-          
+
            url = 'product/products/location'+'/'+location+'/'+plc.pageNo;
         }
         /*
@@ -1802,10 +1802,10 @@ angular.module('app.product')
         plc.getProductsCollection();
       }
 
-    }						
-    
+    }
 
-  
+
+
 
 })(window.angular);
 
@@ -1814,7 +1814,7 @@ angular.module('app.product')
 
     .controller('ProductNameCollectionController',[productNameCollectionController]);
     function productNameCollectionController(){
-    	
+
     }
 })(window.angular);
 
@@ -1855,12 +1855,12 @@ angular.module('app.product')
       .then(function(res){
         plc.areas = res.data;
       },function(res){
-        
+
       });
       getCityProductCategoriesService.getCityCategories(location)
         .then(function(res){
           plc.categories = res.data;
-          
+
         },function(res){
           console.log(res);
         });
@@ -1876,7 +1876,7 @@ angular.module('app.product')
 
     .controller('ProductSubCategoryCollectionController',[productSubCategoryCollectionController]);
     function productSubCategoryCollectionController(){
-    	
+
     }
 })(window.angular);
 
@@ -1886,20 +1886,20 @@ angular.module('app.product')
 
   .controller('SingleProductController',["$scope","$auth",'getProductsService','$location','scrollToIdService',"$routeParams",SingleProductController]);
   function SingleProductController($scope,$auth,getProductsService,$location,scrollToIdService,$routeParams){
-    
+
     var spc = this;
     spc.authCheck = $auth.isAuthenticated();
     activate();
-    
+
 
 
 
     function activate(){
     	getProductsService.getSingleProduct($routeParams.productId).then(function(res){
-    		
-    		spc.product = res.data;	
+
+    		spc.product = res.data;
     	});
-		
+
     }
   }
 
@@ -1922,7 +1922,7 @@ angular.module('app.product')
     }
     function activate(){
     	getProductsService.getStoreProductsList($routeParams.storeId).then(function(response){
-        
+
         splc.storeProductsList = response.data.docs;
       });
     }
@@ -2083,12 +2083,12 @@ angular.module('app.review')
         rsv.review = {};
         rsv.user = {};
         if($routeParams.storeId){
-          rsv.review.storeId = $routeParams.storeId;  
+          rsv.review.storeId = $routeParams.storeId;
         }
         else if($routeParams.productId){
-          rsv.review.productId = $routeParams.productId;  
+          rsv.review.productId = $routeParams.productId;
         }
-        
+
         rsv.ratingClick = ratingClick;
 
         if(userData.getUser()){
@@ -2115,7 +2115,7 @@ angular.module('app.review')
               $route.reload();
             },function(res){
 
-            }); 
+            });
         }
         else if($routeParams.productId){
           reviewService.submitProductReview(rsv.review)
@@ -2126,7 +2126,7 @@ angular.module('app.review')
 
             });
         }
-          
+
         }
 
       }
@@ -2148,11 +2148,11 @@ angular.module('app.review')
     slc.submitUserReviewUpvote = submitUserReviewUpvote;
     slc.deleteUserReviewUpvote = deleteUserReviewUpvote;
     slc.getUserPage = userData.getUserPage;
-    
+
     if(slc.authCheck){
       slc.userUpvotes  = userData.getUser().upvotes;
     }
-    
+
     slc.activate();
     function activate(){
       slc.getStoreReviews();
@@ -2160,7 +2160,7 @@ angular.module('app.review')
     function getStoreReviews(){
       reviewService.getStoreReviews().then(function(res){
         slc.reviewList = res.data;
-        
+
       },function(res){
 
       });
@@ -2177,32 +2177,32 @@ angular.module('app.review')
     }
 
     function userReviewUpvoted(locReview){
-      
+
       var upArr = locReview.upvotes;
       for(var i=0;i<upArr.length;i++){
         if(slc.userUpvotes.indexOf(upArr[i])!=-1){
-          
+
           slc.currentUpvoteId = upArr[i];
-          
+
           return true;
         }
       }
-      
-      
+
+
       //return false;
     }
 
     function submitUserReviewUpvote(review){
       slc.smallLoadingModel[review._id] = true;
-      
+
       reviewService.submitUserReviewUpvote({"reviewId":review._id,"storeId":$routeParams.storeId,"userId":userData.getUser()._id})
       .then(function(res){
         review.upvotes.push(res.data.id);
         slc.userUpvotes.push(res.data.id);
         userData.setUser();
         slc.smallLoadingModel[review._id] = false;
-        
-        
+
+
       });
     }
     function deleteUserReviewUpvote(review){
@@ -2341,15 +2341,15 @@ angular.module('app.review')
           return $http.post(baseUrlService.baseUrl+'upvote/upvotes/review/',obj);
         }
         function deleteUserReviewUpvote(obj){
-          
+
           return $http.delete(baseUrlService.baseUrl+'upvote/upvotes/review/',{"params":obj});
         }
 
         function getUserReviews(){
           var userId = $routeParams.userId;
-         return $http.get(baseUrlService.baseUrl+'user/userReviews/'+userId); 
+         return $http.get(baseUrlService.baseUrl+'user/userReviews/'+userId);
         }
-        
+
 
       }
 })(window.angular);
@@ -2365,7 +2365,7 @@ angular.module('app.store')
     ssc.loading = true;
     ssc.authCheck = $auth.isAuthenticated();
     ssc.getAddressString = getAddressString;
-    
+
     ssc.storeImagesObj = [];
     function getAddressString(){
       return Object.keys(ssc.storeData.address).map(function(key){return ssc.storeData.address[key];}).join(' ');
@@ -2409,7 +2409,7 @@ angular.module('app.store')
       slcc.majorFilter = {};
       slcc.clearAreaFilters = clearAreaFilters;
       function areaRadioClicked(){
-        
+
         slcc.majorFilter.area=slcc.areaModel.area;
         launchFilterEvent(slcc.majorFilter);
       }
@@ -2596,12 +2596,12 @@ angular.module('app.store')
       .then(function(res){
         slcc.areas = res.data;
       },function(res){
-        
+
       });
       getCityCategoriesService.getCityCategories(location)
         .then(function(res){
           slcc.categories = res.data;
-          
+
         },function(res){
           console.log(res);
         });
@@ -2617,7 +2617,7 @@ angular.module('app.store')
 
     .controller('StoreNameCollectionController',[storeNameCollectionController]);
     function storeNameCollectionController(){
-    	
+
     }
 })(window.angular);
 
@@ -2638,17 +2638,17 @@ angular.module('app.store')
 
       activate();
 
-      
+
 
       function userStoreVisited(){
-        
-        
+
+
       }
       function submitVisit(){
         userVisitService.submitVisit(usv.visit)
             .then(function(res){
                     userData.setUser();
-                    
+
                     usv.userStoreVisited = true;
                   },
                   function(res){
@@ -2658,28 +2658,28 @@ angular.module('app.store')
       function deleteVisit(){
         userVisitService.deleteVisit(usv.visit)
             .then(function(res){
-              
+
               userData.setUser();
               usv.userStoreVisited = false;
-             
+
             },
               function(res)
               {
                 console.log(res);
               });
       }
-      
 
 
-     
+
+
       function activate(){
-       
+
        usv.visit.userId = userData.getUser()._id;
         if($routeParams.storeId){
         usv.entity = $routeParams.storeId;
         usv.visit.storeId = $routeParams.storeId;
         usv.getVisitParamObj.storeId = $routeParams.storeId;
-        
+
       }
       else if($routeParams.productId){
         usv.entity = $routeParams.productId;
@@ -2689,15 +2689,15 @@ angular.module('app.store')
       if($auth.isAuthenticated()){
         userVisitService.getVisit(usv.visit)
             .then(function(res){
-              
+
               console.log(res);
               if(res.data[0]){
               if(res.data[0]._id){
-              console.log("the checking for visit");  
+              console.log("the checking for visit");
                 usv.userStoreVisited = true;
               }}
-              
-             
+
+
             },
               function(res)
               {
@@ -2827,7 +2827,7 @@ function GetSingleStoreWithId($http,storeData,baseUrlService,changeBrowserURL){
   this.getSingleStorePage = getSingleStorePage;
   function getStore(id){
     return $http.get(baseUrlService.baseUrl+"store/singleStore/"+id);
-    
+
   }
   function getStoreRating(id){
   	return $http.get(baseUrlService.baseUrl+"review/ratings/store/"+id);
@@ -2949,12 +2949,12 @@ angular.module('app.user')
     function activate(){
 
       ual.loading = true;
-        activityService.getSingleUserActivity($routeParams.userId).then(function(result){        
+        activityService.getSingleUserActivity($routeParams.userId).then(function(result){
         ual.activityData= result.data;
 
         ual.loading = false;
-      }); 
-      
+      });
+
     }
 
 
@@ -2979,7 +2979,7 @@ angular.module('app.user')
         activityService.getUserFollowingActivity($auth.getPayload().sub).then(function(result){
         ual.activityData= result.data;
         ual.loading = false;
-      });  
+      });
       }
       else{
        activityService.getAllActivity().then(function(result){
@@ -2987,10 +2987,10 @@ angular.module('app.user')
         console.log(result);
         ual.activityData= result.data;
         ual.loading = false;
-      }); 
+      });
       }
-      
-      
+
+
     }
 
 
@@ -3021,20 +3021,20 @@ angular.module('app.user')
       userService.getUserFollowers($routeParams.userId)
     .then(function(res){
         ufc.followersList = res.data;
-        
+
         ufc.loading = false;
       });
     }
     function submitUserFollow(followerId){
       userService.submitUserFollow(userData.getUser()._id,followerId).then(function(response){
 
-        
+
         userData.setUser();
       });
     }
     function deleteUserFollow(followerId){
       userService.deleteUserFollow(userData.getUser()._id,followerId).then(function(response){
-        
+
         userData.setUser();
       });
     }
@@ -3073,20 +3073,20 @@ angular.module('app.user')
       userService.getUserFollowing($routeParams.userId)
     .then(function(res){
         ufc.followersList = res.data;
-        
+
         ufc.loading = false;
       });
     }
     function submitUserFollow(followerId){
       userService.submitUserFollow(userData.getUser()._id,followerId).then(function(response){
 
-        
+
         userData.setUser();
       });
     }
     function deleteUserFollow(followerId){
       userService.deleteUserFollow(userData.getUser()._id,followerId).then(function(response){
-        
+
         userData.setUser();
       });
     }
@@ -3153,7 +3153,7 @@ angular.module('app.user')
     .then(function(res){
         upc.currentUserData = res.data;
         upc.loading = false;
-        
+
       });
     }
 
@@ -3181,7 +3181,7 @@ angular.module('app.user')
               });
               upc.spinnerLoading = true;
               file.upload.then(function (response) {
-                  
+
                       file.result = response.data;
                       userData.setUser();
                       userData.getUser().picture = response.data;
@@ -3202,7 +3202,7 @@ angular.module('app.user')
     var upc = this;
     activate();
     function activate(){
-      
+
     }
 
 
@@ -3278,7 +3278,7 @@ function UserService($http,baseUrlService){
     return $http.post(baseUrlService.baseUrl+"user/deleteFollow/"+userId+'/'+followedId);
   }
   function checkUserFollow(userId,followedId){
-    
+
     return $http.get(baseUrlService.baseUrl+"user/checkFollow/"+userId+'/'+followedId);
   }
   function getUserFollowers(userId){

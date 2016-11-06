@@ -14,7 +14,7 @@ module.exports =  function(req, res) {
   var params = {
     code: req.body.code,
     client_id: req.body.clientId,
-    client_secret: 'e04daa2193386bd48ffe509b336aeb99',
+    client_secret: '34684e0d31a4f347e54e4a53dbbd5af4',
     redirect_uri: req.body.redirectUri 
   };
 
