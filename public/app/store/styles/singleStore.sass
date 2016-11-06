@@ -1,0 +1,68 @@
+@import ../../app-modules/styles/main.sass
+.storeImagesCollection
+  background-color: white
+  padding: 5px
+.carouselContainer
+  position: fixed
+  width: 100%
+  height: 100%
+  top: 0
+  left: 0
+  background: rgba(0,0,0,0.9)
+  z-index: 99999999999
+.reviewHeadingText
+  @extend .capital-heading-text
+.addressHeadingText
+  @extend .capital-heading-text
+.singleStoreHeading
+  @extend .capital-heading-text
+.storeImageContent
+  background-color: white
+  margin-top: 35px
+  padding: 10px
+.storeBannerImage
+  width: 100%
+  background-size: cover
+  height: 300px
+.addressContentText
+  @extend .capital-normal-text
+  margin-top: 25px
+  margin-left: 15px
+.storeReviewsBrief
+  width: 100%
+  .storeReviewsBriefIcons
+    .iconContainer
+      text-align: center
+      margin: 5px
+      padding: 15px
+      width: 100%
+      background-color: white
+      transition: all 1s 
+      cursor: pointer
+      &:hover
+        color: red
+      .iconClass
+        font-size: 32px
+        text-align: center
+.storePageStatsNav
+  .statsContent
+    padding: 10px
+    cursor: pointer
+    .statsContentText
+      margin: 2px 0
+      
+      span
+        margin: 5px
+  md-divider
+    border-right-width: 3px
+.chipType
+  border: 1px solid #e7e7e7
+  padding: 10px 15px
+  cursor: pointer
+  border-radius: 5%
+  &:hover
+    background-color: #eee
+  .chipText
+    margin-left: 5px
+    color: #7B8489
+    font-size: 14px

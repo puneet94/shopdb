@@ -1,0 +1,21 @@
+<div class="storeAddressPartial" >
+  <h1 class="addressHeadingText">Address</h1>
+
+
+  <div class="addressContentSection" layout="column" layout-gt-md="row">
+    <div class="addressContentText" >
+        <span>{{::ssc.storeData.address.locality}}</span>
+        <span>{{::ssc.storeData.address.area}}</span>
+
+      </div>
+    
+    <div class="addressContentMap">
+      <div class="">
+        <map style="" scrollwheel="false" center="ssc.getAddressString()">
+           <marker position="ssc.getAddressString()" title="{{ssc.storeData.name}}"></marker>
+        </map>
+      </div>
+    </div>
+  </div>
+
+</div>

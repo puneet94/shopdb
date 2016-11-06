@@ -1,0 +1,44 @@
+<div ng-controller="StoreStatisticsController as ssc" layout="column" ng-cloak="">
+  <md-content class="md-padding">
+    <md-tabs md-selected="selectedIndex" md-border-bottom="" md-autoselect="" md-dynamic-height="">
+      
+      <md-tab  label="Store Info">
+        <div  >
+          <div ng-include="'app/admin/views/adminEditStore.html'" flex></div>
+          <br>
+
+        </div>
+      </md-tab>
+      <md-tab  label="Products">
+        <div>
+                <div ng-include="'app/admin/views/adminCreateProduct.html'" flex></div>
+                <h3>Products</h3>
+                <div class="" ng-include="'app/product/views/productsStoreCollection.html'" ></div>
+          <br>
+
+        </div>
+      </md-tab>
+      <md-tab  label="Offers">
+        <div class="demo-tab" >
+           
+          <br>
+
+        </div>
+      </md-tab>
+      <md-tab  label="Reviews">
+        <div  >
+           <div class="" ng-include="'app/reviews/views/storeReviewList.html'" ></div>
+          
+
+        </div>
+      </md-tab>
+    </md-tabs>
+  </md-content>
+
+
+</div>
+
+<!--
+Copyright 2016 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that can be foundin the LICENSE file at http://material.angularjs.org/HEAD/license.
+-->

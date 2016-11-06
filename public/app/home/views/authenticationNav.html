@@ -1,0 +1,48 @@
+
+<div ng-controller='AuthController as ahc'>
+  <div ng-if="ahc.isAuth" >
+    <div ng-controller="UserActionListController as ualc">
+      <md-menu md-offset="-70 70">
+        <div aria-label="Open phone interactions menu" class="md-icon-button" ng-click="ualc.openMenu($mdOpenMenu, $event)">
+          <img class="userActionListImage" ng-src={{ualc.userProfilePic}}>
+        </div>
+        <md-menu-content width="2">
+          <md-menu-item>
+            <md-button ng-click="ualc.getUserPage()">
+              
+              My profile
+            </md-button>
+          </md-menu-item>
+          
+          <md-menu-item ng-repeat = "userStore in ualc.userStoresList">
+            <md-button aria-label="User store" ng-click="ualc.getAdminStore(userStore._id)">
+              {{userStore.name}}-{{userStore.address.locality}}
+            </md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button class="md-raised" aria-label="Create new store" ng-click="ualc.createNewStore()">
+              Create Store
+            </md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button class="md-raised" aria-label="Logout" ng-click="ahc.authLogout()">
+              Logout
+            </md-button>
+          </md-menu-item>
+          
+        </md-menu-content>
+    </md-menu>  
+    </div>
+    
+    
+  </div>
+
+  <div ng-if="!ahc.isAuth"  layout-xs="column" layout-align-xs="space-between center">
+    <md-button class="md-raised" aria-label="login" ng-click="ahc.loginPage()">
+      Login
+    </md-button>
+    <md-button class="md-raised" aria-label="Login with facebook" ng-click="ahc.authenticate('facebook')">
+      facebook
+    </md-button>
+  </div>
+</div>
