@@ -7,11 +7,12 @@
   <div class="" layout="row" layout-xs="column" layout-sm="column">
     <div class="storeLeftPane" flex-sm="100" flex-xs="100" flex="70" >
       <div class="storeImageContent" >
-
-        <div class="storeBannerImage" style='background-image:url("{{asc.storeData.bannerImage}}")'>
-          <button class="imageUploadClick" type="file" ngf-select="asc.uploadSingleImage($file, $invalidFiles)"
+      
+        <div class="adminStoreBannerImage" style='background-image:url("{{asc.storeData.bannerImage}}")'>
+          <button class="imageUploadClick" type="file" ngf-select="asc.uploadStoreBanner($file, $invalidFiles)"
           accept="image/*" ngf-max-height="1000" ngf-max-size="10MB">
-      Upload Banner Image</button>
+            <i class="fa fa-camera" aria-hidden="true"></i>
+          </button>
       </div>
 
       <div class="storeHeadingRating" layout="row" layout-align="space-between">

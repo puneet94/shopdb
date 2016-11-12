@@ -21,32 +21,30 @@ reviewRouter.route('/reviews')
 			if(err){
 				res.send(err);
 			}
-
 			res.json(reviews);
-			//res.render("stores",{"stores":stores});
 		})
 	});
 reviewRouter.route('/ratings/store/:storeId')
 .get(function(req,res){
 	Review.find({'store':req.params.storeId})
-				.select('rating -_id')
-				.exec(function(err, result) {
-						if(err){
-						res.send(err);
-					}
-					else{
-						var avg = 0;
-						for (var i = 0; i < result.length; i++) {
-							avg = avg + parseInt(result[i].rating);
-						}
-						if(result.length==0){
-							res.json(0);
-						}else{
-							res.json(avg/result.length);//chek	
-						}
-						
-					}
-				});
+		.select('rating -_id')
+		.exec(function(err, result) {
+				if(err){
+				res.send(err);
+			}
+			else{
+				var avg = 0;
+				for (var i = 0; i < result.length; i++) {
+					avg = avg + parseInt(result[i].rating);
+				}
+				if(result.length==0){
+					res.json(0);
+				}else{
+					res.json(avg/result.length);//chek	
+				}
+				
+			}
+		});
 });
 reviewRouter.route('/reviews/store/:storeId')
 .get(function(req,res){

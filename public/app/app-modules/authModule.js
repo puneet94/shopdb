@@ -35,7 +35,7 @@ angular
       $authProvider.signupUrl = "http://localhost:3000/authenticate/signup";
 
       $authProvider.facebook({
-        clientId: '991629147629579',
+        clientId: '1068203956594250',
         url:'http://localhost:3000/authenticate/auth/facebook'
       });
       //$httpProvider.interceptors.push('authInterceptor');

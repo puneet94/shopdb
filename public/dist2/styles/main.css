@@ -1,3 +1,28 @@
+.adminStoreBannerImage {
+  height: 300px;
+  width: 100%;
+  background-size: 100% 100%;
+  position: relative; }
+  .adminStoreBannerImage .imageUploadClick {
+    position: absolute;
+    right: -10px;
+    background: none;
+    font-size: 32px;
+    border: none;
+    -webkit-transition: all ease-in 400ms;
+            transition: all ease-in 400ms;
+    -webkit-transition-delay: 400ms;
+            transition-delay: 400ms;
+    visibility: hidden; }
+  .adminStoreBannerImage:hover .imageUploadClick {
+    position: absolute;
+    right: 0px;
+    color: #eee;
+    background: none;
+    font-size: 32px;
+    border: none;
+    visibility: visible; }
+
 .formItem-help-text {
   font-size: 12px; }
 
@@ -110,117 +135,6 @@
   to {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg); } }
-
-.userActionListImage {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin: 10px; }
-
-.search-banner {
-  width: 100%;
-  height: 50vh;
-  position: relative;
-  background-image: url("https://www.ultimatedesignertoolkit.com/wp-content/uploads/2015/11/Background_5.jpg");
-  background-position: 0 0;
-  background-size: cover;
-  background-repeat: no-repeat;
-  padding-bottom: 50px; }
-
-.dark-mask-absolute {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  background-color: rgba(233, 30, 99, 0.35); }
-
-.content-header {
-  position: relative;
-  color: white; }
-
-.search-box-container {
-  margin: auto 10%;
-  font-family: 'Raleway', sans-serif !important; }
-
-.logoSection {
-  color: white;
-  margin: 10px; }
-
-.chipElement {
-  background: #e0e0e0;
-  color: #424242;
-  cursor: default;
-  border-radius: 16px;
-  font-weight: 900;
-  height: 32px;
-  line-height: 32px;
-  margin: 8px 8px 0 0;
-  padding: 0 12px;
-  box-sizing: border-box;
-  max-width: 100%;
-  position: relative; }
-
-@media (max-width: 959px) and (min-width: 600px) {
-  .search-banner {
-    height: 50vh; }
-  .searchBoxLayout {
-    height: 120px; }
-  .search-box-container {
-    margin: auto 10%;
-    font-family: 'Raleway', sans-serif !important; }
-    .search-box-container > div:first-child {
-      height: 250px; } }
-
-@media (max-width: 599px) {
-  .search-box-container {
-    margin: auto 10%;
-    font-family: 'Raleway', sans-serif !important; } }
-
-@media (max-width: 959px) and (min-width: 600px) {
-  .homePageDiv .searchBoxLayout {
-    height: 300px; } }
-
-@media (max-width: 599px) {
-  .fixedTopHeader {
-    position: fixed;
-    top: 0px;
-    z-index: 99999; }
-  .scrollUpSearch {
-    position: fixed;
-    top: 55px;
-    width: 100%;
-    z-index: 99;
-    display: none; }
-  .search-icon-div {
-    padding: 10px; }
-  .fixedHeaderMain {
-    margin-top: 65px; }
-  .homePageDiv .searchBoxLayout {
-    height: 300px; }
-  .homePageDiv .fixedTopHeader {
-    position: relative; }
-  .homePageDiv .search-box-container {
-    margin: auto 5%;
-    width: auto; }
-  .homePageDiv .search-banner {
-    height: 100vh;
-    padding: 0; } }
-
-.searchBoxStores .searchBoxLayout {
-  height: 80px;
-  padding: 20px;
-  background-color: teal; }
-
-@media (max-width: 959px) and (min-width: 600px) {
-  .searchBoxStores .searchBoxLayout {
-    padding: 0;
-    height: 100%; } }
-
-@media (max-width: 599px) {
-  .searchBoxStores .searchBoxLayout {
-    padding: 0;
-    height: 100%; } }
 
 .productPageContainer .singleProductContainer .productTopContainer .productImageContainer {
   padding: 10px;
@@ -341,6 +255,117 @@
     .userRatingSection .rating > label:hover ~ input:checked ~ label, .userRatingSection .rating > input:checked ~ label:hover ~ label {
       color: #FFED85; }
 
+.userActionListImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 10px; }
+
+.search-banner {
+  width: 100%;
+  height: 50vh;
+  position: relative;
+  background-image: url("https://www.ultimatedesignertoolkit.com/wp-content/uploads/2015/11/Background_5.jpg");
+  background-position: 0 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding-bottom: 50px; }
+
+.dark-mask-absolute {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(233, 30, 99, 0.35); }
+
+.content-header {
+  position: relative;
+  color: white; }
+
+.search-box-container {
+  margin: auto 10%;
+  font-family: 'Raleway', sans-serif !important; }
+
+.logoSection {
+  color: white;
+  margin: 10px; }
+
+.chipElement {
+  background: #e0e0e0;
+  color: #424242;
+  cursor: default;
+  border-radius: 16px;
+  font-weight: 900;
+  height: 32px;
+  line-height: 32px;
+  margin: 8px 8px 0 0;
+  padding: 0 12px;
+  box-sizing: border-box;
+  max-width: 100%;
+  position: relative; }
+
+@media (max-width: 959px) and (min-width: 600px) {
+  .search-banner {
+    height: 50vh; }
+  .searchBoxLayout {
+    height: 120px; }
+  .search-box-container {
+    margin: auto 10%;
+    font-family: 'Raleway', sans-serif !important; }
+    .search-box-container > div:first-child {
+      height: 250px; } }
+
+@media (max-width: 599px) {
+  .search-box-container {
+    margin: auto 10%;
+    font-family: 'Raleway', sans-serif !important; } }
+
+@media (max-width: 959px) and (min-width: 600px) {
+  .homePageDiv .searchBoxLayout {
+    height: 300px; } }
+
+@media (max-width: 599px) {
+  .fixedTopHeader {
+    position: fixed;
+    top: 0px;
+    z-index: 99999; }
+  .scrollUpSearch {
+    position: fixed;
+    top: 55px;
+    width: 100%;
+    z-index: 99;
+    display: none; }
+  .search-icon-div {
+    padding: 10px; }
+  .fixedHeaderMain {
+    margin-top: 65px; }
+  .homePageDiv .searchBoxLayout {
+    height: 300px; }
+  .homePageDiv .fixedTopHeader {
+    position: relative; }
+  .homePageDiv .search-box-container {
+    margin: auto 5%;
+    width: auto; }
+  .homePageDiv .search-banner {
+    height: 100vh;
+    padding: 0; } }
+
+.searchBoxStores .searchBoxLayout {
+  height: 80px;
+  padding: 20px;
+  background-color: teal; }
+
+@media (max-width: 959px) and (min-width: 600px) {
+  .searchBoxStores .searchBoxLayout {
+    padding: 0;
+    height: 100%; } }
+
+@media (max-width: 599px) {
+  .searchBoxStores .searchBoxLayout {
+    padding: 0;
+    height: 100%; } }
+
 .capital-heading-text {
   text-transform: capitalize;
   font-size: 24px;
@@ -424,7 +449,7 @@
 
 .storeBannerImage {
   width: 100%;
-  background-size: cover;
+  background-size: 100% 100%;
   height: 300px; }
 
 .addressContentText {

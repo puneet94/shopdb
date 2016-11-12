@@ -15,7 +15,6 @@ function ActivityService($http,baseUrlService){
   this.getUserFollowingActivity = getUserFollowingActivity;
   function getSingleUserActivity(id){
     return $http.get(baseUrlService.baseUrl+'activity/singleUserActivity/'+id);
-
   }
   function getAllActivity(){
     return $http.get(baseUrlService.baseUrl+'activity/allActivity/');

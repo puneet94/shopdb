@@ -4,7 +4,8 @@ var mongoose = require('mongoose');
 var cloudinary = require('cloudinary').v2;
 var multer = require('multer');
 var upload = multer({ dest: './uploads/'});
-
+var models = require('..//models/storeModel');
+var Store = models.Store;
 cloudinary.config({
     cloud_name: 'shoppingdirectory',
     api_key: '967339527283183',
@@ -13,19 +14,39 @@ cloudinary.config({
 var common = require('../routes/commonRouteFunctions');
 var uploadController = {
   singleUpload: singleUpload,
-  multipleUpload: multipleUpload
+  multipleUpload: multipleUpload,
+  uploadStoreBanner: uploadStoreBanner
 };
 function singleUpload(req, res){
   var file = req.file;    
   console.log("image upload");
   cloudinary.uploader.upload(file.path, function(reqc, resc) {
     var imgUrl = resc.url;
-    console.log(imgUrl);
     res.send(imgUrl);
   });
-
 }
+function uploadStoreBanner(req,res){
+  var file = req.file;    
+  console.log("image upload");
+  cloudinary.uploader.upload(file.path, function(reqc, resc) {
+    var imgUrl = resc.url;
+    console.log(imgUrl);
+    Store.findById(req.params.storeId, function (err, store) {
+    if (err){
+      callback(err, null);
+    }
+    else {
+      item = req.body;
+      store.bannerImage = imgUrl;
+      store.save(function (err, result) {
+        res.send(imgUrl);
 
+      });
+    }
+  });
+    
+  }); 
+}
 function multipleUpload(req, res){
   var imgArray = [];
   var imgArrayMin = [];

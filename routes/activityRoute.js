@@ -55,6 +55,7 @@ activityRouter.route('/userFollowingActivity/:userId')
 			.findById(req.params.userId)
 			.select('following')
 			.exec(function(err,result){
+				console.log(result);
 				followingList  = result.following;
 				getActivity(res,followingList);
 			});

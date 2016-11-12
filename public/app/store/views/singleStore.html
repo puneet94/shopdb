@@ -7,7 +7,11 @@
   <div class="" layout="row" layout-xs="column" layout-sm="column">
     <div class="storeLeftPane" flex-sm="100" flex-xs="100" flex="70" >
       <div class="storeImageContent" >
-
+        <div ng-if="!ssc.storeData.admin">
+          <md-button class="md-primary md-raised" ng-click="showAlert($event)"   >
+            Own this store?
+          </md-button>
+        </div>
         <div class="storeBannerImage" style='background-image:url("{{ssc.storeData.bannerImage}}")'>
 
       </div>

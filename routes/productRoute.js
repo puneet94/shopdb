@@ -68,7 +68,7 @@ productRouter.route('/products/store/:storeId/:pageNo')
 	})
 	.get(function(req,res){
 		Product.paginate({'store':req.params.storeId},
-			{page: req.params.pageNo, limit: 10 }, function(err, result) {
+			{page: req.params.pageNo, limit: 35 }, function(err, result) {
 		    if(err){
 				res.send(err);
 			}
@@ -84,7 +84,7 @@ productRouter.route('/products/category/:category/:location/:pageNo')
 		queryObject['address.city']=req.params.location;
 		queryObject['category'] = req.params.category;
 		Product.paginate(queryObject,
-			{page: req.params.pageNo, limit: 10 }, function(err, result) {
+			{page: req.params.pageNo, limit: 35 }, function(err, result) {
 		    if(err){
 				res.send(err);
 			}
@@ -100,7 +100,7 @@ productRouter.route('/products/subCategory/:subCategory/:location/:pageNo')
 		queryObject['address.city']=req.params.location;
 		queryObject['subCategory'] = req.params.subCategory;
 		Product.paginate(queryObject,
-			{page: req.params.pageNo, limit: 10 }, function(err, result) {
+			{page: req.params.pageNo, limit: 35 }, function(err, result) {
 		    if(err){
 				res.send(err);
 			}
@@ -116,7 +116,7 @@ productRouter.route('/products/name/:name/:location/:pageNo')
 		queryObject['address.city']=req.params.location;
 		queryObject['name'] = req.params.name;
 		Product.paginate(queryObject,
-			{page: req.params.pageNo, limit: 10 }, function(err, result) {
+			{page: req.params.pageNo, limit: 35 }, function(err, result) {
 		    if(err){
 				res.send(err);
 			}
@@ -151,7 +151,7 @@ productRouter.route('/products/location/:location/:pageNo')
 		}
 		//queryObject['category'] = req.params.category;
 		Product.paginate(queryObject,
-			{page: req.params.pageNo, limit: 10 }, function(err, result) {
+			{page: req.params.pageNo, limit: 35 }, function(err, result) {
 		    if(err){
 				res.send(err);
 			}

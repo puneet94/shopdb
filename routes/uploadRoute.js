@@ -17,6 +17,7 @@ uploadRouter.route('/multipleUpload').post(commons.ensureAuthenticated,upload.ar
 
 uploadRouter.route('/singleUpload').post(commons.ensureAuthenticated,upload.single('file'),uploadController.singleUpload);
 
+uploadRouter.route('/storeBannerUpload/:storeId').post(commons.ensureAuthenticated,upload.single('file'),uploadController.uploadStoreBanner);
 
 
 module.exports = uploadRouter;

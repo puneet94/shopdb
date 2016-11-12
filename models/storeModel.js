@@ -241,7 +241,6 @@ var StoreSchema = new Schema({
 	visitsCount: Number,
 	productsCount:Number,
 	reviewsCount:Number
-
 },{ collection : 'stores' });
 
 StoreSchema.post('init', function () {
