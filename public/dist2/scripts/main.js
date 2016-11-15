@@ -129,7 +129,7 @@ angular
       $authProvider.signupUrl = "https://shopuae.herokuapp.com/authenticate/signup";
 
       $authProvider.facebook({
-        clientId: '1068203956594250',
+        clientId: '991629147629579',
         url:'https://shopuae.herokuapp.com/authenticate/auth/facebook'
       });
       //$httpProvider.interceptors.push('authInterceptor');
@@ -763,30 +763,13 @@ function loadingDirective() {
 
 (function(angular){
   angular.module('app.admin')
-    .controller('CreateStoreController',['$auth','adminStoreService','Upload','$routeParams','$timeout','baseUrlService',CreateStoreController]);
-    function CreateStoreController($auth,adminStoreService,Upload,$routeParams,$timeout,baseUrlService){
+    .controller('CreateStoreController',['$auth','adminStoreService','Upload','userData','$timeout','baseUrlService','$location',CreateStoreController]);
+    function CreateStoreController($auth,adminStoreService,Upload,userData,$timeout,baseUrlService,$location){
     	var csc = this;
     	csc.storeForm = {};
       csc.storeForm.storeImages = [];
     	activate();
     	csc.createStore = createStore;
-        /*csc.uploadSingleImage = function(file, errFiles) {
-          csc.f = file;
-          csc.errFile = errFiles && errFiles[0];
-          if (file) {
-              file.upload = Upload.upload({
-                  url: baseUrlService.baseUrl+'upload/singleUpload',
-                  data: {file: file}
-              });
-              csc.spinnerLoading = true;
-              file.upload.then(function (response) {
-                  file.result = response.data;
-                  csc.storeForm.bannerImage = response.data;
-                  //$('.userProfileImage').find('img').attr('src',response.data);
-                  csc.spinnerLoading = false;
-              });
-          }
-      };*/
     csc.uploadMultipleImages = function (files) {
         csc.files = files;
         angular.forEach(files, function(file) {
@@ -815,8 +798,11 @@ function loadingDirective() {
         csc.storeForm.bannerImage = csc.storeForm.storeImages[0];
     		adminStoreService.createStore(csc.storeForm)
 	    		.then(function(response){
-	    			console.log(response);
+	    			console.log(response.data._id);
+            userData.setUser();
 	    			alert("store created");
+            $location.url('/admin/adminStorePage/'+response.data._id);
+            //$window.location.reload();
 	    		},function(response){
 	    			console.log(response);
 	    		});	
@@ -1075,7 +1061,7 @@ angular.module('authModApp')
     logCl.user = {};
     logCl.submitLogin = submitLogin;
     logCl.signUp = signUp;
-    console.log("form thr ontdg");
+    
     logCl.authenticate = function(provider) {
       $auth.authenticate(provider);
       $location.path("/");
@@ -1089,9 +1075,7 @@ angular.module('authModApp')
       $auth.login(logCl.user)
     	.then(function(response){
 
-          userData.setUser(response.data.user);
-          //console.log(userData.getUser());
-          console.log('history url');
+          userData.setUser(response.data.user);    
           alert("Login successfull");
           window.history.back();
     		},function(response){
@@ -1349,7 +1333,8 @@ angular.module('authModApp')
 		    	$auth.authenticate(provider).then(function(response) {
 						userData.setUser();
 						alert('login with facebook successfull');
-						$route.reload();
+						//$route.reload();
+						$window.location.reload();
 	        });
 	    	}
 	    	function authLogout(){
@@ -1758,6 +1743,7 @@ angular.module('app.product')
         plc.pageNo = 0;
         plc.paramData = data;
         plc.getProductsCollection();
+        
       });
       function getSingleProduct(product,scrollId){
         var url = "product/singleProduct/"+product._id;//+"/"+product.myslug;
@@ -2377,6 +2363,87 @@ angular.module('app.review')
 })(window.angular);
 
 (function(angular){
+  angular.module('app.store')
+  .directive('filterDirective',["$window","$location", filterDirective])
+  .directive('addClass',["$window","$location", addClassDirective])
+  .directive('removeClass',["$window","$location", removeClassDirective])
+  .directive('siblingRemoveClass',["$window","$location", siblingRemoveClassDirective]);
+  function filterDirective($window,$location) {
+    return {
+      restrict: 'E',
+      templateUrl:'app/store/views/filterDirectiveTemplate.html',
+      scope:{
+        filterName:"@filterName",
+        radioModel:"=radioModel",
+        radioChange:"&radioChange",
+        radioRepeat:"=radioRepeat",
+        clearClick:"&clearClick"
+      },
+      link: function(scope, element, attrs) {
+      }
+    };
+  }
+  function addClassDirective($window,$location) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+
+
+        $(element).on('click',function(){
+          //$(element).removeClass('highlightClass');
+          $(this).addClass(attrs.addClass);
+
+        });
+
+      }
+    };
+  }
+  function siblingRemoveClassDirective($window,$location) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        $(element).on('click',function(){
+          $(this).siblings().removeClass(attrs.siblingRemoveClass);
+        });
+
+      }
+    };
+  }
+
+  function removeClassDirective($window,$location) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        $(element).on('click',function(){
+          $(this).siblings('.filterDirectiveRadioGroup').find('.filterRadioButton').removeClass(attrs.removeClass);
+        });
+
+      }
+    };
+  }
+
+
+})(window.angular);
+
+(function(angular){
+  angular.module('app.store')
+  .directive('scrollToId',['scrollToIdService',scrollToIdDirective]);
+
+  function scrollToIdDirective(scrollToIdService) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        $(element).on('click',function(){
+          scrollToIdService.scrollToId(attrs.scrollToId);
+        });
+      }
+    };
+  }
+
+
+})(window.angular);
+
+(function(angular){
   'use strict';
 angular.module('app.store')
 
@@ -2743,87 +2810,6 @@ angular.module('app.store')
       }
 
     }
-
-})(window.angular);
-
-(function(angular){
-  angular.module('app.store')
-  .directive('filterDirective',["$window","$location", filterDirective])
-  .directive('addClass',["$window","$location", addClassDirective])
-  .directive('removeClass',["$window","$location", removeClassDirective])
-  .directive('siblingRemoveClass',["$window","$location", siblingRemoveClassDirective]);
-  function filterDirective($window,$location) {
-    return {
-      restrict: 'E',
-      templateUrl:'app/store/views/filterDirectiveTemplate.html',
-      scope:{
-        filterName:"@filterName",
-        radioModel:"=radioModel",
-        radioChange:"&radioChange",
-        radioRepeat:"=radioRepeat",
-        clearClick:"&clearClick"
-      },
-      link: function(scope, element, attrs) {
-      }
-    };
-  }
-  function addClassDirective($window,$location) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-
-
-        $(element).on('click',function(){
-          //$(element).removeClass('highlightClass');
-          $(this).addClass(attrs.addClass);
-
-        });
-
-      }
-    };
-  }
-  function siblingRemoveClassDirective($window,$location) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        $(element).on('click',function(){
-          $(this).siblings().removeClass(attrs.siblingRemoveClass);
-        });
-
-      }
-    };
-  }
-
-  function removeClassDirective($window,$location) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        $(element).on('click',function(){
-          $(this).siblings('.filterDirectiveRadioGroup').find('.filterRadioButton').removeClass(attrs.removeClass);
-        });
-
-      }
-    };
-  }
-
-
-})(window.angular);
-
-(function(angular){
-  angular.module('app.store')
-  .directive('scrollToId',['scrollToIdService',scrollToIdDirective]);
-
-  function scrollToIdDirective(scrollToIdService) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        $(element).on('click',function(){
-          scrollToIdService.scrollToId(attrs.scrollToId);
-        });
-      }
-    };
-  }
-
 
 })(window.angular);
 

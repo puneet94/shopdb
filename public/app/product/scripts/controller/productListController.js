@@ -15,6 +15,7 @@ angular.module('app.product')
         plc.pageNo = 0;
         plc.paramData = data;
         plc.getProductsCollection();
+        
       });
       function getSingleProduct(product,scrollId){
         var url = "product/singleProduct/"+product._id;//+"/"+product.myslug;

@@ -22,7 +22,8 @@
 		    	$auth.authenticate(provider).then(function(response) {
 						userData.setUser();
 						alert('login with facebook successfull');
-						$route.reload();
+						//$route.reload();
+						$window.location.reload();
 	        });
 	    	}
 	    	function authLogout(){

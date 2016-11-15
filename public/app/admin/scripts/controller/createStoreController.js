@@ -1,29 +1,12 @@
 (function(angular){
   angular.module('app.admin')
-    .controller('CreateStoreController',['$auth','adminStoreService','Upload','$routeParams','$timeout','baseUrlService',CreateStoreController]);
-    function CreateStoreController($auth,adminStoreService,Upload,$routeParams,$timeout,baseUrlService){
+    .controller('CreateStoreController',['$auth','adminStoreService','Upload','userData','$timeout','baseUrlService','$location',CreateStoreController]);
+    function CreateStoreController($auth,adminStoreService,Upload,userData,$timeout,baseUrlService,$location){
     	var csc = this;
     	csc.storeForm = {};
       csc.storeForm.storeImages = [];
     	activate();
     	csc.createStore = createStore;
-        /*csc.uploadSingleImage = function(file, errFiles) {
-          csc.f = file;
-          csc.errFile = errFiles && errFiles[0];
-          if (file) {
-              file.upload = Upload.upload({
-                  url: baseUrlService.baseUrl+'upload/singleUpload',
-                  data: {file: file}
-              });
-              csc.spinnerLoading = true;
-              file.upload.then(function (response) {
-                  file.result = response.data;
-                  csc.storeForm.bannerImage = response.data;
-                  //$('.userProfileImage').find('img').attr('src',response.data);
-                  csc.spinnerLoading = false;
-              });
-          }
-      };*/
     csc.uploadMultipleImages = function (files) {
         csc.files = files;
         angular.forEach(files, function(file) {
@@ -52,8 +35,11 @@
         csc.storeForm.bannerImage = csc.storeForm.storeImages[0];
     		adminStoreService.createStore(csc.storeForm)
 	    		.then(function(response){
-	    			console.log(response);
+	    			console.log(response.data._id);
+            userData.setUser();
 	    			alert("store created");
+            $location.url('/admin/adminStorePage/'+response.data._id);
+            //$window.location.reload();
 	    		},function(response){
 	    			console.log(response);
 	    		});	

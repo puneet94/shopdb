@@ -5,7 +5,7 @@
   <h1 ng-if="plc.productsList.length==0">No products available</h1>
   <div class="productContainer" layout="row" layout-wrap layout-align="space-around start">
     <div class="singleProductContainer" md-whiteframe="1" flex="30"  flex-xs="100" ng-repeat="product in plc.productsList track by product._id">
-      <img class="singleProductImage" ng-src="{{::product.images[0]}}">
+      <img class="singleProductImage" ng-src="{{::product.images[0]||product.imagesMin[0]}}">
       <div class="productDetailsContainer">
         <div layout="row" layout-align="space-between end">
           <div class="productName"> {{::product.name}}</div>
@@ -13,8 +13,8 @@
         </div>
         
         <div >
-          <span class="productCategory">{{::product.category}}</span>
-          <span class="productSubCatgeory">({{::product.subCategory}})
+          <span class="productCategory">{{::product.category.join(",")}}</span>
+          <span class="productSubCatgeory">({{::product.subCategory.join(",")}})
           </span>
         </div>
         <div class="productStatsContainer" layout="row" layout-align="space-between end">

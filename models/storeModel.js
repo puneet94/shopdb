@@ -270,6 +270,7 @@ var ProductSchema = new Schema({
 	upvotes:[{ type:Schema.ObjectId, ref:"Upvote" }],
 	visits:[{ type:Schema.ObjectId, ref:"Visit" }],
 	images:[String],
+	imagesMin:[String],
 	visitsCount: Number,
 	reviewsCount:Number,
 	upvotesCount:Number,

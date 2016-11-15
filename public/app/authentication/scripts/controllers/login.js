@@ -16,7 +16,7 @@ angular.module('authModApp')
     logCl.user = {};
     logCl.submitLogin = submitLogin;
     logCl.signUp = signUp;
-    console.log("form thr ontdg");
+    
     logCl.authenticate = function(provider) {
       $auth.authenticate(provider);
       $location.path("/");
@@ -30,9 +30,7 @@ angular.module('authModApp')
       $auth.login(logCl.user)
     	.then(function(response){
 
-          userData.setUser(response.data.user);
-          //console.log(userData.getUser());
-          console.log('history url');
+          userData.setUser(response.data.user);    
           alert("Login successfull");
           window.history.back();
     		},function(response){

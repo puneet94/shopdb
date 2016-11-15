@@ -40,12 +40,12 @@ function createProduct(req, res){
           console.log("error" + error);
         }
         else{
-          common.saveSearchList(product.name.toLowerCase(),"product",product.address.city,req,res);
+          common.saveSearchList(product.name.toLowerCase(),"product",product.address.city.toLowerCase(),req,res);
           for (var i = 0;i<product.category.length; i++) {
-            common.saveSearchList(product.category[i].toLowerCase(),"product-category",product.address.city,req,res);
+            common.saveSearchList(product.category[i].toLowerCase(),"product-category",product.address.city.toLowerCase(),req,res);
           };
           for (var j = 0;j<product.subCategory.length; j++) {
-            common.saveSearchList(product.subCategory[j].toLowerCase(),"product-subcategory",product.address.city,req,res);
+            common.saveSearchList(product.subCategory[j].toLowerCase(),"product-subcategory",product.address.city.toLowerCase(),req,res);
           };
           
           res.json(result);

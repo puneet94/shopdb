@@ -1,6 +1,6 @@
 <div class="layout-column flex">
    
-   <form name="myFrom" class="" style="">
+   <form name="storeForm" class="" style="" novalidate>
       
       <!--
       <button class="imageUploadClick" type="file" ngf-select="csc.uploadSingleImage($file, $invalidFiles)"
@@ -65,7 +65,7 @@
          <div>
             <md-input-container >
                <label >City</label>
-               <input  type="text" ng-model="csc.storeForm.address.city">
+               <input  type="text" ng-model="csc.storeForm.address.city" required>
                <div ng-messages="InputView.form.$error" >
                   <!-- ngMessage: required -->
                   <div ng-message="required" class="" style="">This field is required</div>
@@ -160,6 +160,6 @@
          </div>
          
       </div>
-      <button ng-click="csc.createStore()">Submit</button>
+      <md-button ng-click="csc.createStore()" class="md-raised md-primary md-button" type="submit">Submit</md-button>
    </form>
 </div>

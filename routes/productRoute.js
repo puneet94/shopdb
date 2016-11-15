@@ -143,11 +143,10 @@ productRouter.route('/products/location/:location/:pageNo')
 		var queryObject = {};
 		queryObject['address.city']=req.params.location;
 		if(req.query.category){
-			console.log("yesyeyeye");
 			queryObject['category'] = req.query.category;
 		}
-		if(req.query.locality){
-			queryObject['address.locality'] = req.query.locality;
+		if(req.query.area){
+			queryObject['address.area'] = req.query.area;
 		}
 		//queryObject['category'] = req.params.category;
 		Product.paginate(queryObject,
@@ -196,9 +195,13 @@ productRouter.route('/localities/:city')
 						var categoryArray = [];
 						for (var i = 0; i < someValue.length; i++) {
 							var singleCategory = someValue[i].category;
-							if(categoryArray.indexOf(singleCategory)==-1){
-								categoryArray.push(singleCategory);	
+							for (var j = 0; j< singleCategory.length; j++) {
+								
+								if(categoryArray.indexOf(singleCategory[j])==-1){
+									categoryArray.push(singleCategory[j]);	
+								}
 							}
+							
 							
 						}
 							res.json(categoryArray);

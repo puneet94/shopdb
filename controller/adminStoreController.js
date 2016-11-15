@@ -17,12 +17,17 @@ function createStore(req, res){
   var store = new Store();
   var address = {};
   item = req.body;
-  store.name = item.name;
-  address = item.address;
+  store.name = item.name.toLowerCase();
+  for (var key in item.address) {
+    if (item.address.hasOwnProperty(key)) {
+      address[key] = item.address[key].toLowerCase();
+    }
+  }
+
   store.address = address;
-  store.category = item.category.split(",");
-  store.subCategory = item.subCategory.split(",");
-  store.keywords = item.keywords.split(",");
+  store.category = item.category.toLowerCase().split(",");
+  store.subCategory = item.subCategory.toLowerCase().split(",");
+  store.keywords = item.keywords.toLowerCase().split(",");
   store.bannerImage = item.bannerImage;
   store.storeImages = item.storeImages;
   store.admin = req.user;
@@ -41,9 +46,9 @@ function createStore(req, res){
             console.log("the suer stpre added");
           }
         })
-      common.saveSearchList(store.name.toLowerCase(),"store",address.city,req,res);
+      common.saveSearchList(store.name.toLowerCase(),"store",address.city.toLowerCase(),req,res);
       for (var i = 0;i<store.category.length; i++) {
-          common.saveSearchList(store.category[i].toLowerCase(),"store-category",address.city,req,res);
+          common.saveSearchList(store.category[i].toLowerCase(),"store-category",address.city.toLowerCase(),req,res);
        };
       res.json(result);
     }
