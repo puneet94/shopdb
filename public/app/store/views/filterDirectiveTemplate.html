@@ -1,6 +1,8 @@
 <div class="filterDirectiveTemplate">
     <div class="filterNameHeading">
         <h5>{{filterName}}</h5>
+        <button type="button" class="clearFilterButton" name="button" ng-disabled="!radioModel[filterName.toLowerCase()]"  remove-class="highlightClass" ng-click="clearClick()">Clear</button>
+        <div style="clear:both;"></div>
     </div>
 
     <div class="filterDirectiveRadioGroup" >
@@ -13,5 +15,5 @@
       </md-radio-group>
     </div>
 
-    <button type="button" name="button" ng-disabled="!radioModel[filterName.toLowerCase()]"  remove-class="highlightClass" ng-click="clearClick()">Clear</button>
+    
 </div>

@@ -23,8 +23,6 @@
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
-
-
         $(element).on('click',function(){
           //$(element).removeClass('highlightClass');
           $(this).addClass(attrs.addClass);
