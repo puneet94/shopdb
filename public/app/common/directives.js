@@ -200,7 +200,8 @@ function loadingDirective() {
         upFn:'&upFn',
         downFn:'&downFn',
         upvChk:'&upvChk',
-        smallLoading:'=smallLoading'
+        smallLoading:'=smallLoading',
+        currentReview:'=currentReview'
       },
       templateUrl: 'app/reviews/views/likeReview.html'
     };

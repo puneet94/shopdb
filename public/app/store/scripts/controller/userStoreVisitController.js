@@ -13,19 +13,13 @@
       usv.getVisitParamObj.userId = userData.getUser()._id;
       usv.userStoreVisited = false;
 
-      activate();
-
-      
-
-      function userStoreVisited(){
-        
-        
+      activate();      
+      function userStoreVisited(){        
       }
       function submitVisit(){
         userVisitService.submitVisit(usv.visit)
             .then(function(res){
                     userData.setUser();
-                    
                     usv.userStoreVisited = true;
                   },
                   function(res){
@@ -46,9 +40,6 @@
               });
       }
       
-
-
-     
       function activate(){
        
        usv.visit.userId = userData.getUser()._id;
@@ -67,10 +58,10 @@
         userVisitService.getVisit(usv.visit)
             .then(function(res){
               
-              console.log(res);
+              
               if(res.data[0]){
               if(res.data[0]._id){
-              console.log("the checking for visit");  
+              
                 usv.userStoreVisited = true;
               }}
               

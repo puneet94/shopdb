@@ -11,11 +11,7 @@ function storeData($window) {
   var storage = $window.localStorage;
   var obj1 = {
     setStore: function (store) {
-        console.log('****from the storeData factory*****');
-        console.log(store);
         storage.setItem('store',JSON.stringify(store));
-
-
     },
     getStore: function(){
       return JSON.parse(storage.getItem('store'));

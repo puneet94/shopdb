@@ -4,8 +4,11 @@ var jwt = require('jwt-simple');
 var models = require('../models/storeModel.js');
 var User = models.User;
 var createJWT = require('./jwtService.js');
+//shopuae
+var clientSecret = '34684e0d31a4f347e54e4a53dbbd5af4';
 
-
+//shoppinss
+//var clientSecret = 'e04daa2193386bd48ffe509b336aeb99';
 module.exports =  function(req, res) {
   console.log(req.body.redirectUri )
   var fields = ['id', 'email', 'first_name', 'last_name', 'link', 'name'];
@@ -14,7 +17,7 @@ module.exports =  function(req, res) {
   var params = {
     code: req.body.code,
     client_id: req.body.clientId,
-    client_secret: '34684e0d31a4f347e54e4a53dbbd5af4',
+    client_secret: clientSecret,
     redirect_uri: req.body.redirectUri 
   };
 

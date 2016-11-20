@@ -1,6 +1,7 @@
 var express = require('express');
 var models = require('..//models/storeModel');
 var Store = models.Store;
+var User = models.User;
 var UserSearch = require('..//models/user_search');
 var storeRouter = express.Router();
 var commons = require('./commonRouteFunctions');
@@ -255,5 +256,65 @@ storeRouter.route('/storesCollection')
         });
 		
 	});
+
+storeRouter.route('/submitStoreFollow')
+	.post(commons.ensureAuthenticated,function(req,res){
+		var recData = req.body;
+		var user_id = recData.userId;
+		var store_id  = recData.storeId;
+		commons.validateId(user_id,User).then(function(doc){
+			commons.validateId(store_id,Store).then(function(doc2){
+				User.update({_id:user_id},{$push:{'storeFollowing':store_id}},{upsert:true},function(err,data){
+					if(err){
+
+					}
+					else{
+						Store.update({_id:store_id},{$push:{'userFollowers':user_id}},{upsert:true},function(err,data){
+						if(err){
+						}
+						else{
+							var activity = {};
+    						activity.creator = user_id;
+							activity.followed = store_id;
+							activity.statement = "followed store";
+							commons.enterActivity(activity);
+							res.json('followers created');
+						}
+						})
+					}
+				})
+			})
+		});
+
+	})
+
+storeRouter.route('/deleteStoreFollow')
+	.post(commons.ensureAuthenticated,function(req,res){
+		var recData = req.body;
+		var user_id = recData.userId;
+		var store_id  = recData.storeId;
+		commons.validateId(user_id,User).then(function(doc){
+			commons.validateId(store_id,Store).then(function(doc2){
+
+				User.update({_id:user_id},{$pull:{'storeFollowing':store_id}},{upsert:true},function(err,data){
+					if(err){
+
+					}
+					else{
+						User.update({_id:store_id},{$pull:{'userFollowers':user_id}},{upsert:true},function(err,data){
+						if(err){
+
+						}
+						else{
+							res.json('followers deleted');
+						}
+						})
+					}
+				})
+			})
+		});
+
+	})
+
 
 module.exports = storeRouter;

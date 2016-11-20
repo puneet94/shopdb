@@ -14,23 +14,51 @@
   @extend .capital-heading-text
 .addressHeadingText
   @extend .capital-heading-text
-.singleStoreHeading
-  @extend .capital-heading-text
 .storeImageContent
-  
   margin-top: 35px
-  padding: 10px
+  background-color: #fafafa
+  border: 1px solid #e7e7e7
+  border-radius: 1px;
   position: relative
   .businessClaimButton
     position: absolute
     button
       color: white
-    
       text-transform: capitalize
-.storeBannerImage
-  width: 100%
-  background-size: 100% 100%
-  height: 300px
+  .storeBannerImage
+    width: 100%
+    background-size: 100% 100%
+    height: 300px
+  .storeHeadingRating
+    padding: 10px
+    .singleStoreHeading
+      font-size: 24px
+      text-transform: capitalize
+  .userInteractionNav
+    margin-bottom: 20px
+    .userInteractionContainers
+      font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif
+      margin: 0 10px
+      background: #FFF
+      border: 1px solid #e7e7e7
+      color: #7B8489
+      border-radius: 5px
+      font-weight: 500
+      .chipType
+        display: block
+        padding: 6px 15px
+        cursor: pointer
+        
+        transition: background .1s ease
+        &:hover
+          background: #eee
+        .chipText
+          margin-left: 7px
+          //color: #7B8489
+          font-size: 14px
+          
+
+
 .addressContentText
   @extend .capital-normal-text
   margin-top: 25px
@@ -62,14 +90,3 @@
         margin: 5px
   md-divider
     border-right-width: 3px
-.chipType
-  border: 1px solid #e7e7e7
-  padding: 10px 15px
-  cursor: pointer
-  border-radius: 5%
-  &:hover
-    background-color: #eee
-  .chipText
-    margin-left: 5px
-    color: #7B8489
-    font-size: 14px

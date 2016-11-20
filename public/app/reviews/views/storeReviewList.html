@@ -26,16 +26,19 @@
         <div class="reviewContent">
           {{::review.description }}
         </div>
-        <div class="contentRatingSection">
-          <div class="reviewStats"><span>{{ ::review.upvotes.length ||0 }} <i class="fa fa-heart-o" aria-hidden="true"></i></span></div>
-        </div>
+        <!--<div class="contentRatingSection">
+          <div class="reviewStats">
+            <span>{{ ::review.upvotes.length ||0 }} <i class="fa fa-heart-o" aria-hidden="true"></i></span>
+          </div>
+        </div>-->
 
         <div class="userReviewUpvoteSection" ng-if="srl.authCheck">
           <like-directive 
             up-fn="srl.submitUserReviewUpvote(review)" 
             down-fn="srl.deleteUserReviewUpvote(review)" 
             upv-chk="srl.userReviewUpvoted(review)"
-            small-loading="srl.smallLoadingModel[review._id]">    
+            small-loading="srl.smallLoadingModel[review._id]"
+            current-review="review">    
           </like-directive>
   
           

@@ -111,6 +111,11 @@ angular
   ])
   .config(["$routeProvider","$httpProvider","$authProvider",authConfig]);
   function authConfig($routeProvider,$httpProvider,$authProvider) {
+    //shopuae
+    var fbClientId = '991629147629579';
+    //shoppinss
+    //var fbclientId = '1068203956594250';
+    var authenticateUrl = 'https://shopuae.herokuapp.com/authenticate';
     $routeProvider
       .when('/signup',{
         templateUrl:'app/authentication/views/register.html',
@@ -125,12 +130,12 @@ angular
         controller: 'LoginController',
         controllerAs: 'login'
       });
-      $authProvider.loginUrl = "https://shopuae.herokuapp.com/authenticate/login";
-      $authProvider.signupUrl = "https://shopuae.herokuapp.com/authenticate/signup";
+      $authProvider.loginUrl =authenticateUrl + "/login";
+      $authProvider.signupUrl = authenticateUrl+"/signup";
 
       $authProvider.facebook({
-        clientId: '991629147629579',
-        url:'https://shopuae.herokuapp.com/authenticate/auth/facebook'
+        clientId: fbClientId,
+        url:authenticateUrl+'/auth/facebook'
       });
       //$httpProvider.interceptors.push('authInterceptor');
   }
@@ -643,7 +648,8 @@ function loadingDirective() {
         upFn:'&upFn',
         downFn:'&downFn',
         upvChk:'&upvChk',
-        smallLoading:'=smallLoading'
+        smallLoading:'=smallLoading',
+        currentReview:'=currentReview'
       },
       templateUrl: 'app/reviews/views/likeReview.html'
     };
@@ -677,6 +683,78 @@ function loadingDirective() {
    * Review module of the application.
    */
   angular.module('app.review',[]);
+})(window.angular);
+
+(function(angular){
+  'use strict';
+
+angular.module('app.admin')
+  .service('adminProductService',["$http","baseUrlService",'changeBrowserURL',AdminProductService]);
+
+/*
+  * This servic has a function to get collection of products`
+*/
+
+function AdminProductService($http,baseUrlService,changeBrowserURL){
+  this.checkProductAdmin = checkProductAdmin;
+  this.createProduct = createProduct;
+  this.getProduct = getProduct;
+  this.updateProduct = updateProduct;
+  this.deleteProduct  = deleteProduct;
+  function checkProductAdmin(userId,productId){
+    return $http.get(baseUrlService.baseUrl);
+  }
+  function createProduct(product,storeId){
+  	return $http.post(baseUrlService.baseUrl+'admin/products/'+storeId,product);
+    //return $http.get(baseUrlService.baseUrl+url,{params:paramData});
+
+  }
+  function updateProduct(productId,product){
+  	return $http.put(baseUrlService.baseUrl+'admin/product/'+productId,product);
+  }
+  function getProduct(productId,obj){
+    return $http.get(baseUrlService.baseUrl+'admin/product/'+productId,{params:obj});       
+  }
+  function deleteProduct(){
+
+  }
+}
+})(window.angular);
+
+(function(angular){
+  'use strict';
+
+angular.module('app.admin')
+  .service('adminStoreService',["$http","baseUrlService",'changeBrowserURL',AdminStoreService]);
+
+/*
+  * This servic has a function to get collection of stores`
+*/
+
+function AdminStoreService($http,baseUrlService,changeBrowserURL){
+  this.checkStoreAdmin = checkStoreAdmin;
+  this.createStore = createStore;
+  this.getStore = getStore;
+  this.updateStore = updateStore;
+  this.deleteStore  = deleteStore;
+  function checkStoreAdmin(userId,storeId){
+    return $http.get(baseUrlService.baseUrl);
+  }
+  function createStore(store){
+  	return $http.post(baseUrlService.baseUrl+'admin/stores',store);
+    //return $http.get(baseUrlService.baseUrl+url,{params:paramData});
+
+  }
+  function updateStore(storeId,store){
+  	return $http.put(baseUrlService.baseUrl+'admin/store/'+storeId,store);
+  }
+  function getStore(storeId,obj){
+    return $http.get(baseUrlService.baseUrl+'admin/store/'+storeId,{params:obj});       
+  }
+  function deleteStore(){
+
+  }
+}
 })(window.angular);
 
 (function(angular){
@@ -942,78 +1020,6 @@ function loadingDirective() {
     }
 })(window.angular);
 
-(function(angular){
-  'use strict';
-
-angular.module('app.admin')
-  .service('adminProductService',["$http","baseUrlService",'changeBrowserURL',AdminProductService]);
-
-/*
-  * This servic has a function to get collection of products`
-*/
-
-function AdminProductService($http,baseUrlService,changeBrowserURL){
-  this.checkProductAdmin = checkProductAdmin;
-  this.createProduct = createProduct;
-  this.getProduct = getProduct;
-  this.updateProduct = updateProduct;
-  this.deleteProduct  = deleteProduct;
-  function checkProductAdmin(userId,productId){
-    return $http.get(baseUrlService.baseUrl);
-  }
-  function createProduct(product,storeId){
-  	return $http.post(baseUrlService.baseUrl+'admin/products/'+storeId,product);
-    //return $http.get(baseUrlService.baseUrl+url,{params:paramData});
-
-  }
-  function updateProduct(productId,product){
-  	return $http.put(baseUrlService.baseUrl+'admin/product/'+productId,product);
-  }
-  function getProduct(productId,obj){
-    return $http.get(baseUrlService.baseUrl+'admin/product/'+productId,{params:obj});       
-  }
-  function deleteProduct(){
-
-  }
-}
-})(window.angular);
-
-(function(angular){
-  'use strict';
-
-angular.module('app.admin')
-  .service('adminStoreService',["$http","baseUrlService",'changeBrowserURL',AdminStoreService]);
-
-/*
-  * This servic has a function to get collection of stores`
-*/
-
-function AdminStoreService($http,baseUrlService,changeBrowserURL){
-  this.checkStoreAdmin = checkStoreAdmin;
-  this.createStore = createStore;
-  this.getStore = getStore;
-  this.updateStore = updateStore;
-  this.deleteStore  = deleteStore;
-  function checkStoreAdmin(userId,storeId){
-    return $http.get(baseUrlService.baseUrl);
-  }
-  function createStore(store){
-  	return $http.post(baseUrlService.baseUrl+'admin/stores',store);
-    //return $http.get(baseUrlService.baseUrl+url,{params:paramData});
-
-  }
-  function updateStore(storeId,store){
-  	return $http.put(baseUrlService.baseUrl+'admin/store/'+storeId,store);
-  }
-  function getStore(storeId,obj){
-    return $http.get(baseUrlService.baseUrl+'admin/store/'+storeId,{params:obj});       
-  }
-  function deleteStore(){
-
-  }
-}
-})(window.angular);
-
 
 // 'use strict';
 //
@@ -1254,7 +1260,7 @@ angular.module('authModApp')
     var cachedUser={};
     var obj1 =  {
       setUser: function (user) {
-        console.log("called me yo");
+        
         if(user){
           storage.setItem('user',JSON.stringify(user));
         }
@@ -1263,7 +1269,7 @@ angular.module('authModApp')
           var userId = $auth.getPayload().sub;
           if(userId){
             $http.get(baseUrlService.baseUrl+'authenticate/user/'+userId).then(function(res){
-              console.log('without param');
+              
               if(obj1.isUserExists()){
                   storage.removeItem('user');
               }
@@ -1278,7 +1284,7 @@ angular.module('authModApp')
             });
           }
         }
-        console.log(storage.getItem('user'));
+        
 
       },
       getUser: function(){
@@ -2217,7 +2223,8 @@ angular.module('app.review')
       slc.smallLoadingModel[review._id] = true;
       reviewService.deleteUserReviewUpvote({"reviewId":review._id,"storeId":$routeParams.storeId,"userId":userData.getUser()._id})
       .then(function(res){
-        review.upvotes.splice(review.upvotes.indexOf(res.data.id), 1);userData.setUser();
+        review.upvotes.splice(review.upvotes.indexOf(res.data.id), 1);
+        userData.setUser();
         slc.smallLoadingModel[review._id] = false;
       });
 
@@ -2646,6 +2653,146 @@ angular.module('app.store')
 (function(angular){
   angular.module('app.store')
 
+    .controller('UserStoreFollowController',["$scope","$auth","$routeParams","userData","userFollowService",UserStoreFollowController]);
+
+    function UserStoreFollowController($scope,$auth,$routeParams,userData,userFollowService){
+      var usu = this;
+      usu.follow = {};
+      usu.followCheck = false;
+      usu.getFollowParamObj = {};
+      usu.submitFollow = submitFollow;
+      usu.deleteFollow = deleteFollow;
+      usu.getFollowParamObj.userId = userData.getUser()._id;
+      usu.userStoreFollowed = false;
+
+      activate();      
+      function userStoreFollowed(){        
+      }
+      function submitFollow(){
+        userFollowService.submitFollow(usu.follow)
+            .then(function(res){
+                    usu.userStoreFollowed = true;
+                    userData.setUser();
+                    
+                  },
+                  function(res){
+                    console.log(res);
+                  });
+      }
+      function deleteFollow(){
+        userFollowService.deleteFollow(usu.follow)
+            .then(function(res){
+              usu.userStoreFollowed = false;
+              userData.setUser();
+              
+             
+            },
+              function(res)
+              {
+                console.log(res);
+              });
+      }
+      
+      function activate(){
+       
+       usu.follow.userId = userData.getUser()._id;
+        if($routeParams.storeId){
+        usu.entity = $routeParams.storeId;
+        usu.follow.storeId = $routeParams.storeId;
+        
+      }
+      else if($routeParams.productId){
+        usu.entity = $routeParams.productId;
+        usu.follow.productId = $routeParams.productId;
+        usu.getFollowParamObj.productId = $routeParams.productId;
+      }
+      if($auth.isAuthenticated()){
+        if(userData.getUser().storeFollowing.indexOf($routeParams.storeId)!=-1){
+          usu.userStoreFollowed = true;
+        }
+        
+      }
+      }
+
+    }
+
+})(window.angular);
+
+(function(angular){
+  angular.module('app.store')
+
+    .controller('UserStoreUpvoteController',["$scope","$auth","$routeParams","userData","userUpvoteService",'storeData',UserStoreUpvoteController]);
+
+    function UserStoreUpvoteController($scope,$auth,$routeParams,userData,userUpvoteService,storeData){
+      var usu = this;
+      usu.upvote = {};
+      usu.upvoteCheck = false;
+      usu.getUpvoteParamObj = {};
+      usu.submitUpvote = submitUpvote;
+      usu.deleteUpvote = deleteUpvote;
+      usu.getUpvoteParamObj.userId = userData.getUser()._id;
+      usu.userStoreUpvoted = false;
+
+      activate();      
+      function userStoreUpvoted(){        
+      }
+      function submitUpvote(){
+        userUpvoteService.submitUpvote(usu.upvote)
+            .then(function(res){
+                    usu.userStoreUpvoted = true;
+                    userData.setUser();
+                    
+                  },
+                  function(res){
+                    console.log(res);
+                  });
+      }
+      function deleteUpvote(){
+        userUpvoteService.deleteUpvote(usu.upvoteId)
+            .then(function(res){
+              usu.userStoreUpvoted = false;
+              userData.setUser();
+            },
+              function(res)
+              {
+                console.log(res);
+              });
+      }
+      
+      function activate(){
+        usu.upvote.userId = userData.getUser()._id;
+        if($routeParams.storeId){
+          usu.upvote.storeId = $routeParams.storeId;
+          usu.upvote.type="store";
+        }
+        else if($routeParams.productId){
+          usu.upvote.type="product";
+          usu.upvote.productId = $routeParams.productId;
+        
+        }
+        if($auth.isAuthenticated()){
+          var currentStore = storeData.getStore();
+          var currentUser = userData.getUser();
+          for (var i = 0; i < currentStore.upvotes.length; i++) {
+            for (var j = 0; j < currentUser.upvotes.length; j++) {
+              if(currentStore.upvotes[i] == currentUser.upvotes[j]){
+                usu.userStoreUpvoted = true;
+                usu.upvoteId = currentStore.upvotes[i];
+                console.log(usu.upvoteId);
+              }
+            }
+            
+          }
+        }
+      }
+
+    }
+
+})(window.angular);
+
+(function(angular){
+  angular.module('app.store')
+
     .controller('UserStoreVisitController',["$scope","$auth","$routeParams","userData","userVisitService",UserStoreVisitController]);
 
     function UserStoreVisitController($scope,$auth,$routeParams,userData,userVisitService){
@@ -2658,19 +2805,13 @@ angular.module('app.store')
       usv.getVisitParamObj.userId = userData.getUser()._id;
       usv.userStoreVisited = false;
 
-      activate();
-
-      
-
-      function userStoreVisited(){
-        
-        
+      activate();      
+      function userStoreVisited(){        
       }
       function submitVisit(){
         userVisitService.submitVisit(usv.visit)
             .then(function(res){
                     userData.setUser();
-                    
                     usv.userStoreVisited = true;
                   },
                   function(res){
@@ -2691,9 +2832,6 @@ angular.module('app.store')
               });
       }
       
-
-
-     
       function activate(){
        
        usv.visit.userId = userData.getUser()._id;
@@ -2712,10 +2850,10 @@ angular.module('app.store')
         userVisitService.getVisit(usv.visit)
             .then(function(res){
               
-              console.log(res);
+              
               if(res.data[0]){
               if(res.data[0]._id){
-              console.log("the checking for visit");  
+              
                 usv.userStoreVisited = true;
               }}
               
@@ -2907,11 +3045,7 @@ function storeData($window) {
   var storage = $window.localStorage;
   var obj1 = {
     setStore: function (store) {
-        console.log('****from the storeData factory*****');
-        console.log(store);
         storage.setItem('store',JSON.stringify(store));
-
-
     },
     getStore: function(){
       return JSON.parse(storage.getItem('store'));
@@ -2926,6 +3060,64 @@ function storeData($window) {
 
 
 
+})(window.angular);
+
+(function(angular){
+  'use strict';
+/*
+  *Service for getting a single store with its id
+*/
+angular.module('app.store')
+  .service('userFollowService',["$http","baseUrlService",UserFollowService]);
+
+/*
+  * This servic has a function names getStore which takes id as parameter and returns a promise
+*/
+function UserFollowService($http,baseUrlService){
+  this.submitFollow = submitFollow;
+  this.deleteFollow = deleteFollow;
+  this.getFollow = getFollow;
+
+  function getFollow(followData){
+    return $http.get(baseUrlService.baseUrl+"follow/followed",{"params":followData});
+  }
+
+  function submitFollow(followData){
+    return $http.post(baseUrlService.baseUrl+"store/submitStoreFollow",followData);
+  }
+  function deleteFollow(followObj){
+    return $http.post(baseUrlService.baseUrl+"store/deleteStoreFollow",followObj);
+  }
+}
+})(window.angular);
+
+(function(angular){
+  'use strict';
+/*
+  *Service for getting a single store with its id
+*/
+angular.module('app.store')
+  .service('userUpvoteService',["$http","baseUrlService",UserUpvoteService]);
+
+/*
+  * This servic has a function names getStore which takes id as parameter and returns a promise
+*/
+function UserUpvoteService($http,baseUrlService){
+  this.submitUpvote = submitUpvote;
+  this.deleteUpvote = deleteUpvote;
+  this.getUpvote = getUpvote;
+
+  function getUpvote(upvoteData){
+    return $http.get(baseUrlService.baseUrl+"upvote/upvoted",{"params":upvoteData});
+  }
+
+  function submitUpvote(upvoteData){
+    return $http.post(baseUrlService.baseUrl+"upvote/upvotes/storeUpvote",upvoteData);
+  }
+  function deleteUpvote(upvoteId){
+    return $http.delete(baseUrlService.baseUrl+"upvote/upvotes/"+upvoteId);//{"params":upvoteObj});
+  }
+}
 })(window.angular);
 
 (function(angular){

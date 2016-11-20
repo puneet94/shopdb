@@ -17,11 +17,11 @@
             <div class="storeHeadingRating" layout="row" layout-align="space-between">
                <div layout="row">
                   <h1 class="singleStoreHeading">{{::ssc.storeData.name}} </h1>
-                  <div class="addressContentText" >
+                  <!--<div class="addressContentText" >
                      <span>{{::ssc.storeData.address.locality}}</span>
                      <span>{{::ssc.storeData.address.area}}</span>
                      <span><a target="_blank" ng-href="http://maps.google.com/?q={{::ssc.storeData.name}}{{::ssc.storeData.address.doorNo}}{{::ssc.storeData.address.locality}}{{::ssc.storeData.address.area}}{{::ssc.storeData.address.city}}{{::ssc.storeData.address.state}}">Map</a></span>
-                  </div>
+                  </div>-->
                </div>
                <div>
                   <h3>
@@ -30,9 +30,9 @@
                   </h3>
                </div>
             </div>
-            <div class="userInteractionNav" layout="row" ng-if="ssc.authCheck">
-               <div class="" ng-controller="UserStoreVisitController as usv">
-                  <div class="userStoreVisitCheck">
+            <div class="userInteractionNav"  ng-if="ssc.authCheck">
+               <div class=""  layout="row" >
+                  <div class="userStoreVisitCheck userInteractionContainers" ng-controller="UserStoreVisitController as usv">
                      <span class="chipType" ng-if="!usv.userStoreVisited" ng-click="usv.submitVisit()">
                      <span>
                      <i aria-hidden="true" class="fa fa-bookmark-o"></i>
@@ -46,6 +46,24 @@
                      <span class="chipText">
                      Visited
                      </span>
+                     </span>
+                  </div>
+                  
+                  <div class="userStoreVisitCheck userInteractionContainers" ng-controller="UserStoreFollowController as usf">
+                     <span class="chipType" ng-if="!usf.userStoreFollowed" ng-click="usf.submitFollow()">
+                        <span>
+                           <i class="fa fa-user-plus" aria-hidden="true"></i>
+                           
+                        </span>
+                        <span class="chipText">Follow</span>
+                     </span>
+                     <span class="chipType" ng-if="usf.userStoreFollowed" ng-click="usf.deleteFollow()">
+                        <span>
+                           <i class="fa fa-user" aria-hidden="true"></i>
+                        </span>
+                        <span class="chipText">
+                           Followed
+                        </span>
                      </span>
                   </div>
                </div>

@@ -4,10 +4,10 @@ URLSlugs = require('mongoose-url-slugs');
 var mongoosePaginate = require('mongoose-paginate');
 var relationship = require("mongoose-relationship"); //Refer https://www.npmjs.com/package/mongoose-relationship
 var Schema  = mongoose.Schema;
-
-var connectionString = "mongodb://shopdb:shopdb1234@ds029476.mlab.com:29476/shopdb";
+var urlStrings = require('../routes/url.js');
+//var connectionString = "mongodb://shopdb:shopdb1234@ds029476.mlab.com:29476/shopdb";
 //var connectionString  = "mongodb://shop_dir:shop_dir@ds023912.mlab.com:23912/shoppins";
-mongoose.createConnection(connectionString,function (err) {
+mongoose.createConnection(urlStrings.connectionString,function (err) {
   if (err) {
     console.log(err);
   }
@@ -30,7 +30,8 @@ var VisitSchema = new Schema({
     time : { type : Date, default: Date.now },
     store : { type:Schema.ObjectId, ref:"Store",childPath:"visits" },
     user : { type:Schema.ObjectId, ref:"User",childPath:"visits" },
-    product:{type:Schema.ObjectId, ref:"Product",childPath:"visits"}
+    product:{type:Schema.ObjectId, ref:"Product",childPath:"visits"},
+    type: String
 },{ collection : 'visits' });
 
 VisitSchema.plugin(relationship, { relationshipPathName:'user' });
@@ -45,6 +46,7 @@ var UpvoteSchema = new Schema({
     product : { type:Schema.ObjectId, ref:"Product",childPath:"upvotes" },
     user : { type:Schema.ObjectId, ref:"User",childPath:"upvotes" },
     review : { type:Schema.ObjectId, ref:"Review",childPath:"upvotes" },
+    type: String
 },{ collection : 'upvotes' });
 
 UpvoteSchema.plugin(relationship, { relationshipPathName:'user' });

@@ -32,7 +32,7 @@ var authenticateRouter = require('./routes/authenticateRoute');
 var reviewRouter = require('./routes/reviewRoute');
 var visitRouter = require('./routes/visitRoute');
 var adminRouter = require('./routes/adminRoute');
-
+var urlStrings = require('./routes/url');
 var uploadRouter = require('./routes/uploadRoute');
 var upvoteRouter = require('./routes/upvoteRoute');
 var userRouter = require('./routes/userRoute');
@@ -76,8 +76,9 @@ app.use(express.static(__dirname + '/public'));
 app.get('*', function (req, res) {
         res.sendFile(__dirname + '/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
-//mongoose.connect("mongodb://shop_dir:shop_dir@ds023912.mlab.com:23912/shoppins");
-mongoose.connect("mongodb://shopdb:shopdb1234@ds029476.mlab.com:29476/shopdb");
+
+mongoose.connect(urlStrings.connectionString);//"mongodb://shop_dir:shop_dir@ds023912.mlab.com:23912/shoppins");
+//mongoose.connect("mongodb://shopdb:shopdb1234@ds029476.mlab.com:29476/shopdb");
 app.listen(app.get('port'),function(){
 	console.log("Listening");
 	console.log(__dirname);

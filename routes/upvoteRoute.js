@@ -19,25 +19,45 @@ upvoteRouter.use(function(req,res,next){
 
 
 
-upvoteRouter.route('/upvotes')
-	.get(function(req,res){
-		Upvote.find(function(err,upvotes){
-			if(err){
-				res.send(err);
-			}
-			res.json(upvotes);
-			
-		})
-	})
-	.delete(commons.ensureAuthenticated,function(req,res){
-	Upvote.find({ id: req.params.upvoteId}).remove(function (err) {
-					if(err){
-						return res.send(err);
-					}
-        			res.send('removed viit');
-    				});
-})
 
+//storing the upvote of only a store
+upvoteRouter.route('/upvotes/storeUpvote')
+.post(function(req,res){
+	var upvote = new Upvote();
+  	var recData = req.body;
+	upvote.user=recData.userId;
+	var validateEntity = false;
+	if(recData.storeId){
+		upvote.type = "store";
+ 		upvote.store = mongoose.Types.ObjectId(recData.storeId);	
+ 		validateEntity = commons.validateId(upvote.store,Store);
+	}
+	else if(recData.productId){
+		upvote.type = "product";
+ 		upvote.product = mongoose.Types.ObjectId(recData.product);	
+ 		validateEntity = commons.validateId(upvote.product,Product);
+	}
+	
+
+	if(commons.validateId(upvote.user,User) && validateEntity ){
+		upvote.save(function(err){
+    if(err){
+      if(err.code == 11000){
+        return res.json({success:false,'message':'Upvote already exists'});
+      }
+      else{
+        console.log(err);
+        return res.send(err);
+
+      }
+    }
+
+
+    res.json({message:"Upvote created "+upvote.type});
+  });
+	}
+
+})
 upvoteRouter.route('/upvotes/store/:storeId?')
 .get(function(req,res){
 	Upvote.find({'store':req.params.storeId})
@@ -96,20 +116,20 @@ upvoteRouter.route('/upvotes/review')
 		console.log("hit the of");
 		upvote.entityId = recData.storeId;	
 		upvote.store = recData.storeId;	
+		upvote.type = "review";
 		var entity = Store;
 	}
 	else if(recData.productId){
 		upvote.entityId = recData.productId;
 		upvote.product = recData.productId;
 		var entity = Product;
+		upvote.type = "review";
 	}
 	else{
 		upvote.entityId = recData.userId;
 		var entity = User;
 	}
-	upvote.review = recData.reviewId;
-	console.log(upvote);
-	console.log("dingdingidng");
+	upvote.review = recData.reviewId;	
 	commons.validateId(upvote.review,Review).then(function(doc){
 		commons.validateId(upvote.user,User).then(function(doc){
 			commons.validateId(upvote.entityId,entity).then(function(doc){
@@ -134,10 +154,12 @@ upvoteRouter.route('/upvotes/review')
 })
 .delete(commons.ensureAuthenticated,function(req,res){
 	var params  = req.query;
+	console.log("deleting the review upvote");
 	console.log(params);
 	var queryObj = {"review":params.reviewId,"user":params.userId};
 	if(params.storeId){
 		queryObj.store=params.storeId;
+
 	}
 	else if(params.productId){
 		queryObj.product=params.productId;
@@ -150,11 +172,36 @@ upvoteRouter.route('/upvotes/review')
 					else{
 						console.log(upvote);
 						upvote.remove(function (err) {
-        			res.json({"message":"Upvote delted","id":upvote._id});
+        				res.json({"message":"Upvote delted","id":upvote._id});
     				});
 					}
 				});
 })
 
+upvoteRouter.route('/upvotes/:upvoteId')																																																																								
+	.get(function(req,res){
+		Upvote.find(function(err,upvotes){
+			if(err){
+				res.send(err);
+			}
+			res.json(upvotes);
+			
+		})
+	})
+	.delete(commons.ensureAuthenticated,function(req,res){
+		console.log("deleting upvote");
+		console.log(req.params);
 
+		Upvote.findById(req.params.upvoteId).exec(function(err, upvote) {
+			if(err){
+				res.send(err);
+			}
+			else{
+				console.log(upvote);
+				upvote.remove(function (err) {
+				res.json({"message":"Upvote delted","id":upvote._id});
+			});
+			}
+		});
+})
 module.exports = upvoteRouter;

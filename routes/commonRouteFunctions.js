@@ -11,6 +11,9 @@ var Product = models.Product;
 var cloudinary = require('cloudinary').v2;
 var Activity = models.Activity;
 var cob = {};
+cob.connectionString = "mongodb://shop_dir:shop_dir@ds023912.mlab.com:23912/shoppins";
+//cob.connectionString = "mongodb://shopdb:shopdb1234@ds029476.mlab.com:29476/shopdb";
+
 cob.cloudUpload = function(req, res, callback){
       var imgArray = [];
       var imgArrayMin = [];
@@ -78,8 +81,7 @@ cob.ensureStoreAdminAuthenticated = function ensureStoreAdminAuthenticated(req, 
 }
 cob.validateId = function validateId(id,entityType){
   
-  console.log("over here");
-  console.log(entityType);
+  
   return entityType.findById(mongoose.Types.ObjectId(id)).exec();
   
   

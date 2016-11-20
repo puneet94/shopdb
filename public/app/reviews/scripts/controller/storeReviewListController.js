@@ -75,7 +75,8 @@ angular.module('app.review')
       slc.smallLoadingModel[review._id] = true;
       reviewService.deleteUserReviewUpvote({"reviewId":review._id,"storeId":$routeParams.storeId,"userId":userData.getUser()._id})
       .then(function(res){
-        review.upvotes.splice(review.upvotes.indexOf(res.data.id), 1);userData.setUser();
+        review.upvotes.splice(review.upvotes.indexOf(res.data.id), 1);
+        userData.setUser();
         slc.smallLoadingModel[review._id] = false;
       });
 

@@ -16,7 +16,7 @@ angular.module('authModApp')
     var cachedUser={};
     var obj1 =  {
       setUser: function (user) {
-        console.log("called me yo");
+        
         if(user){
           storage.setItem('user',JSON.stringify(user));
         }
@@ -25,7 +25,7 @@ angular.module('authModApp')
           var userId = $auth.getPayload().sub;
           if(userId){
             $http.get(baseUrlService.baseUrl+'authenticate/user/'+userId).then(function(res){
-              console.log('without param');
+              
               if(obj1.isUserExists()){
                   storage.removeItem('user');
               }
@@ -40,7 +40,7 @@ angular.module('authModApp')
             });
           }
         }
-        console.log(storage.getItem('user'));
+        
 
       },
       getUser: function(){
