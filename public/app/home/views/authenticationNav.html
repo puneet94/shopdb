@@ -2,11 +2,20 @@
 <div ng-controller='AuthController as ahc'>
   <div ng-if="ahc.isAuth" >
     <div ng-controller="UserActionListController as ualc">
-      <md-menu md-offset="-70 70">
-        <div aria-label="Open phone interactions menu" class="md-icon-button" ng-click="ualc.openMenu($mdOpenMenu, $event)">
-          <img class="userActionListImage" ng-src={{ualc.userProfilePic}}>
-        </div>
-        <md-menu-content width="2">
+      <md-menu md-offset="-100 70" ">
+        <div aria-label="Open phone interactions menu" class="md-icon-button userActivityButtonContainer" ng-click="ualc.openMenu($mdOpenMenu, $event)">
+        
+            <span>
+              <img class="userActionListImage" ng-src={{ualc.userProfilePic}}>
+            </span>
+            <span class="userName">
+              {{ualc.user.displayName.split(" ")[0]}}
+            </span>
+            <span class="dropIcon"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
+            <span style="clear:both;"></span>
+          </div>
+        
+        <md-menu-content width="2" class="mdMenuContainer">
           <md-menu-item>
             <md-button ng-click="ualc.getUserPage()">
               

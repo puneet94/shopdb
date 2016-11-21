@@ -5,7 +5,7 @@
 <div ng-include="'app/home/searchBox.html'"></div>
 <main flex class="fixedHeaderMain">
    <div class="" layout="row" layout-xs="column" layout-sm="column">
-      <div class="storeLeftPane" flex-sm="100" flex-xs="100" flex="70" >
+      <div class="storeLeftPane" flex-sm="100" flex-xs="100" flex="65" >
          <div class="storeImageContent" >
             <div ng-if="!ssc.storeData.admin" class="businessClaimButton">
                <md-button class="md-primary md-raised " ng-click="showAlert($event)"   >
@@ -79,7 +79,8 @@
                      </div>
                   </md-tab-label>
                   <md-tab-body>
-                     <div  class="md-body-tab">
+                     <div  class="md-body-tab" ng-include="'app/store/views/storeAddressDetails.html'" >
+
                      </div>
                   </md-tab-body>
                </md-tab>

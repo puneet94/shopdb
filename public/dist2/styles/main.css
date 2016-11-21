@@ -173,11 +173,37 @@ md-ink-bar {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg); } }
 
-.userActionListImage {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin: 10px; }
+.mdMenuContainer {
+  max-width: 200px;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  font-size: 10px; }
+
+.userActivityButtonContainer {
+  border-radius: 2px;
+  font-size: 14px;
+  height: 40px;
+  margin: 10px;
+  background-color: white;
+  border: 2px solid white; }
+  .userActivityButtonContainer:hover {
+    background-color: #E5E7EC;
+    box-shadow: 0 0 0 1px transparent inset;
+    color: rgba(0, 0, 0, 0.95);
+    border: 2px solid #e7e7e7; }
+  .userActivityButtonContainer span {
+    float: left;
+    margin: 5px;
+    margin-top: 6px; }
+  .userActivityButtonContainer .userName {
+    text-transform: capitalize;
+    margin-top: 10px; }
+  .userActivityButtonContainer .dropIcon {
+    margin-top: 10px; }
+  .userActivityButtonContainer .userActionListImage {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%; }
 
 .search-banner {
   width: 100%;
@@ -577,9 +603,16 @@ md-ink-bar {
 .storePageStatsNav md-divider {
   border-right-width: 3px; }
 
-.storeAddressPartial {
-  background-color: white;
-  padding: 5px; }
+.storeDetailsContainer {
+  padding: 10px; }
+  .storeDetailsContainer .infoContainer .contentHeader {
+    margin: 5px 0;
+    font-size: 18px; }
+  .storeDetailsContainer .infoContainer .contentText p {
+    text-transform: capitalize;
+    margin: 0; }
+  .storeDetailsContainer .infoContainer .contentText .moreLocationsLink {
+    font-size: 12px; }
 
 .capital-heading-text, .storeListHeading {
   text-transform: capitalize;

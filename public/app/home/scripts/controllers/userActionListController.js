@@ -27,6 +27,7 @@ angular.module('app.user')
 
 
       function activate(){
+        ualc.user = userData.getUser();
         ualc.userProfilePic = userData.getUser().picture;
         ualc.userStoresList = userData.getUser().storeId;
       	
