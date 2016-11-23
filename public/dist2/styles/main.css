@@ -131,6 +131,13 @@ md-ink-bar {
     animation: spinner .6s linear infinite;
     -webkit-animation: spinner .6s linear infinite; }
 
+.innerSpinnerDiv {
+  position: absolute;
+  top: 50%;
+  bottom: 0;
+  left: 0;
+  right: 0; }
+
 .ajaxLoadingSpinnerDiv {
   position: fixed;
   z-index: 999;
@@ -173,11 +180,121 @@ md-ink-bar {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg); } }
 
+.productPageContainer .singleProductContainer .productTopContainer .productImageContainer {
+  padding: 10px;
+  background-color: white;
+  margin: 10px; }
+  .productPageContainer .singleProductContainer .productTopContainer .productImageContainer .productImage {
+    width: 100%; }
+
+.productPageContainer .singleProductContainer .productTopContainer .productBriefContainer {
+  padding: 10px;
+  background-color: white;
+  margin: 10px; }
+  .productPageContainer .singleProductContainer .productTopContainer .productBriefContainer .productName {
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: capitalize; }
+  .productPageContainer .singleProductContainer .productTopContainer .productBriefContainer .productPrice {
+    font-size: 16px; }
+
+.productPageContainer .singleProductContainer .productMiddleContainer .productReviewsBrief .productReviewsBriefIcons .iconContainer {
+  text-align: center;
+  margin: 5px;
+  padding: 15px;
+  width: 100%;
+  cursor: pointer;
+  background-color: white;
+  -webkit-transition: all 1s;
+          transition: all 1s; }
+  .productPageContainer .singleProductContainer .productMiddleContainer .productReviewsBrief .productReviewsBriefIcons .iconContainer:hover {
+    color: red; }
+  .productPageContainer .singleProductContainer .productMiddleContainer .productReviewsBrief .productReviewsBriefIcons .iconContainer .iconClass {
+    font-size: 32px;
+    text-align: center; }
+
+.capital-heading-text {
+  text-transform: capitalize;
+  font-size: 24px;
+  font-weight: 600;
+  color: #795548; }
+
+.capital-sub-heading-text {
+  text-transform: capitalize;
+  font-size: 16px;
+  font-weight: 600;
+  color: #795548; }
+
+.capital-normal-text {
+  text-transform: capitalize;
+  font-size: 14px;
+  font-weight: 400;
+  color: #795548; }
+
+.productContainer {
+  padding: 10px; }
+  .productContainer .singleProductContainer {
+    background-color: white;
+    margin-bottom: 10px;
+    border-right: 10px solid #f3f3f3;
+    box-shadow: none; }
+    .productContainer .singleProductContainer .productImageContainer {
+      width: 100%;
+      margin: 5px;
+      box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.12); }
+      .productContainer .singleProductContainer .productImageContainer .singleProductImage {
+        width: 100%;
+        height: 100%; }
+    .productContainer .singleProductContainer .productDetailsContainer {
+      padding: 5px;
+      text-transform: capitalize;
+      box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.12); }
+      .productContainer .singleProductContainer .productDetailsContainer .productName {
+        font-size: 16px;
+        font-weight: 700;
+        text-transform: capitalize;
+        margin: 3px 0;
+        cursor: pointer; }
+      .productContainer .singleProductContainer .productDetailsContainer .productCategory {
+        font-size: 11px;
+        padding: 2px 5px;
+        background-color: green;
+        margin: 2px;
+        color: white;
+        border-radius: 2px; }
+      .productContainer .singleProductContainer .productDetailsContainer .productSubCategory {
+        font-size: 11px;
+        padding: 2px 5px;
+        background-color: blue;
+        margin: 2px;
+        color: white;
+        border-radius: 2px; }
+      .productContainer .singleProductContainer .productDetailsContainer .productPrice {
+        font-size: 12px; }
+      .productContainer .singleProductContainer .productDetailsContainer .productStatsContainer {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 3px 0; }
+        .productContainer .singleProductContainer .productDetailsContainer .productStatsContainer .viewProductLink {
+          cursor: pointer;
+          text-decoration: underline;
+          font-size: 12px;
+          color: #795548;
+          font-weight: 500; }
+
 .mdMenuContainer {
-  max-width: 200px;
+  width: 250px;
+  text-transform: capitalize;
   border: 1px solid #eee;
   border-radius: 3px;
   font-size: 10px; }
+  .mdMenuContainer .md-button span {
+    width: 100%;
+    text-transform: capitalize;
+    overflow-x: hidden;
+    text-overflow: ellipsis; }
+  .mdMenuContainer .menuHeading {
+    margin: 2px 5px; }
 
 .userActivityButtonContainer {
   border-radius: 2px;
@@ -309,92 +426,6 @@ md-ink-bar {
   .searchBoxStores .searchBoxLayout {
     padding: 0;
     height: 100%; } }
-
-.productPageContainer .singleProductContainer .productTopContainer .productImageContainer {
-  padding: 10px;
-  background-color: white;
-  margin: 10px; }
-  .productPageContainer .singleProductContainer .productTopContainer .productImageContainer .productImage {
-    width: 100%; }
-
-.productPageContainer .singleProductContainer .productTopContainer .productBriefContainer {
-  padding: 10px;
-  background-color: white;
-  margin: 10px; }
-  .productPageContainer .singleProductContainer .productTopContainer .productBriefContainer .productName {
-    font-size: 18px;
-    font-weight: 600;
-    text-transform: capitalize; }
-  .productPageContainer .singleProductContainer .productTopContainer .productBriefContainer .productPrice {
-    font-size: 16px; }
-
-.productPageContainer .singleProductContainer .productMiddleContainer .productReviewsBrief .productReviewsBriefIcons .iconContainer {
-  text-align: center;
-  margin: 5px;
-  padding: 15px;
-  width: 100%;
-  cursor: pointer;
-  background-color: white;
-  -webkit-transition: all 1s;
-          transition: all 1s; }
-  .productPageContainer .singleProductContainer .productMiddleContainer .productReviewsBrief .productReviewsBriefIcons .iconContainer:hover {
-    color: red; }
-  .productPageContainer .singleProductContainer .productMiddleContainer .productReviewsBrief .productReviewsBriefIcons .iconContainer .iconClass {
-    font-size: 32px;
-    text-align: center; }
-
-.capital-heading-text {
-  text-transform: capitalize;
-  font-size: 24px;
-  font-weight: 600;
-  color: #795548; }
-
-.capital-sub-heading-text {
-  text-transform: capitalize;
-  font-size: 16px;
-  font-weight: 600;
-  color: #795548; }
-
-.capital-normal-text {
-  text-transform: capitalize;
-  font-size: 14px;
-  font-weight: 400;
-  color: #795548; }
-
-.productContainer {
-  padding: 10px; }
-  .productContainer .singleProductContainer {
-    background-color: white;
-    margin-bottom: 10px; }
-    .productContainer .singleProductContainer .singleProductImage {
-      width: 100%;
-      height: 150px;
-      padding-bottom: 2px;
-      border-bottom: 1px solid #333; }
-    .productContainer .singleProductContainer .productDetailsContainer {
-      padding: 5px;
-      text-transform: capitalize; }
-      .productContainer .singleProductContainer .productDetailsContainer .productName {
-        font-size: 14px;
-        font-weight: 600;
-        text-transform: capitalize;
-        margin: 3px 0; }
-      .productContainer .singleProductContainer .productDetailsContainer .productCategory {
-        font-size: 12px; }
-      .productContainer .singleProductContainer .productDetailsContainer .productSubCatgeory {
-        font-size: 10px; }
-      .productContainer .singleProductContainer .productDetailsContainer .productPrice {
-        font-size: 12px; }
-      .productContainer .singleProductContainer .productDetailsContainer .productStatsContainer {
-        font-size: 14px;
-        font-weight: 600;
-        margin: 3px 0; }
-        .productContainer .singleProductContainer .productDetailsContainer .productStatsContainer .viewProductLink {
-          cursor: pointer;
-          text-decoration: underline;
-          font-size: 12px;
-          color: #795548;
-          font-weight: 500; }
 
 .reviewSubmitForm {
   background-color: white;
@@ -607,10 +638,11 @@ md-ink-bar {
   padding: 10px; }
   .storeDetailsContainer .infoContainer .contentHeader {
     margin: 5px 0;
-    font-size: 18px; }
+    font-size: 16px; }
   .storeDetailsContainer .infoContainer .contentText p {
     text-transform: capitalize;
-    margin: 0; }
+    margin: 0;
+    font-size: 14px; }
   .storeDetailsContainer .infoContainer .contentText .moreLocationsLink {
     font-size: 12px; }
 

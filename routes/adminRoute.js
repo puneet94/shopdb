@@ -32,6 +32,4 @@ adminRouter.route('/store/products')
 .get(commons.ensureAuthenticated,function(req,res){
   res.send('store');
 })
-
-
 module.exports = adminRouter;

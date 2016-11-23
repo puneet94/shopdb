@@ -186,7 +186,6 @@ angular.module('app.common',[]);
 angular.module('app.product',[]).config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
-    //https://shopuae.herokuapp.com/#/productsCollection/tab2/chennai/tab2-products-in-chennai
       when('/productsCollectionName/:productName/:location/:slug?', {
         templateUrl: 'app/product/views/productsNameCollection.html',
         controller: 'ProductNameCollectionController',
@@ -453,6 +452,7 @@ angular.module('app.common')
   .directive('scrollDown', ["$window","$location", scrollDown])
   .directive('toggleMobile',["$window","$location", toggleMobile])
   .directive('loadingDirective',[loadingDirective])
+  .directive('innerLoadingDirective',[innerLoadingDirective])
   .directive('metaTags',[metaTagsDirective])
   .directive('likeDirective',[likeDirective])
   .directive('followDirective',[followDirective])
@@ -610,6 +610,27 @@ function loadingDirective() {
         }
       };
   }
+
+function innerLoadingDirective() {
+      return {
+        restrict: 'E',
+        replace:true,
+        scope:{
+          loading:"=innerLoading"
+        },
+        template: '<div class="innerSpinnerDiv"><div class="ajaxLoadingSpinner"></div></div>',
+        link: function (scope, element, attr) {
+              scope.$watch('loading', function (val) {
+                  if (val)
+                      $(element).show();
+                  else
+                      $(element).hide();
+              });
+        }
+      };
+  }
+
+
   function smallLoadingDirective() {
       return {
         restrict: 'EA',
@@ -1709,7 +1730,7 @@ angular.module('app.user')
       function openMenu($mdOpenMenu, ev) {
 	      originatorEv = ev;
 	      $mdOpenMenu(ev);
-		}
+		  }
       function createNewStore(){
         changeBrowserURL.changeBrowserURLMethod('/admin/createStore/'); 
       }
@@ -1741,7 +1762,6 @@ angular.module('app.product')
   	 var plc = this;
       plc.pageNo = 0;
       plc.productsList = [];
-      console.log($routeParams);
       plc.getSingleProduct = getSingleProduct;
       plc.getProductsCollection = getProductsCollection;
       plc.productsSearchHeader = $routeParams.slug;
@@ -1789,7 +1809,6 @@ angular.module('app.product')
         getProductCollectionService.getProductCollection(url,plc.paramData)
         .then(function(response){
           plc.totalProducts = response.data.total;
-          console.log(response);
           if(plc.productsList.length===0){
             var tempProductList = [];
             for (var i = response.data.docs.length - 1; i >= 0; i--) {
@@ -1943,6 +1962,28 @@ angular.module('app.product')
     }
 
   }
+
+})(window.angular);
+
+
+(function(angular){
+  angular.module('app.product')
+  .directive('singleProductDirective',[singleProductDirective]);
+  
+  function singleProductDirective(){
+    return {
+      restrict: 'E',
+      replace: true,
+      templateUrl:'app/product/views/singleProductTemplate.html',
+      scope:{
+        product:'=singleProduct'
+      },
+      link: function(scope,element,attrs){
+
+      }
+    };
+  }
+  
 
 })(window.angular);
 
@@ -2368,6 +2409,85 @@ angular.module('app.review')
         
 
       }
+})(window.angular);
+
+(function(angular){
+  angular.module('app.store')
+  .directive('filterDirective',["$window","$location", filterDirective])
+  .directive('addClass',["$window","$location", addClassDirective])
+  .directive('removeClass',["$window","$location", removeClassDirective])
+  .directive('siblingRemoveClass',["$window","$location", siblingRemoveClassDirective]);
+  function filterDirective($window,$location) {
+    return {
+      restrict: 'E',
+      templateUrl:'app/store/views/filterDirectiveTemplate.html',
+      scope:{
+        filterName:"@filterName",
+        radioModel:"=radioModel",
+        radioChange:"&radioChange",
+        radioRepeat:"=radioRepeat",
+        clearClick:"&clearClick"
+      },
+      link: function(scope, element, attrs) {
+      }
+    };
+  }
+  function addClassDirective($window,$location) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        $(element).on('click',function(){
+          //$(element).removeClass('highlightClass');
+          $(this).addClass(attrs.addClass);
+
+        });
+
+      }
+    };
+  }
+  function siblingRemoveClassDirective($window,$location) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        $(element).on('click',function(){
+          $(this).siblings().removeClass(attrs.siblingRemoveClass);
+        });
+
+      }
+    };
+  }
+
+  function removeClassDirective($window,$location) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        $(element).on('click',function(){
+          $(this).siblings('.filterDirectiveRadioGroup').find('.filterRadioButton').removeClass(attrs.removeClass);
+        });
+
+      }
+    };
+  }
+
+
+})(window.angular);
+
+(function(angular){
+  angular.module('app.store')
+  .directive('scrollToId',['scrollToIdService',scrollToIdDirective]);
+
+  function scrollToIdDirective(scrollToIdService) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        $(element).on('click',function(){
+          scrollToIdService.scrollToId(attrs.scrollToId);
+        });
+      }
+    };
+  }
+
+
 })(window.angular);
 
 (function(angular){
@@ -2868,85 +2988,6 @@ angular.module('app.store')
       }
 
     }
-
-})(window.angular);
-
-(function(angular){
-  angular.module('app.store')
-  .directive('filterDirective',["$window","$location", filterDirective])
-  .directive('addClass',["$window","$location", addClassDirective])
-  .directive('removeClass',["$window","$location", removeClassDirective])
-  .directive('siblingRemoveClass',["$window","$location", siblingRemoveClassDirective]);
-  function filterDirective($window,$location) {
-    return {
-      restrict: 'E',
-      templateUrl:'app/store/views/filterDirectiveTemplate.html',
-      scope:{
-        filterName:"@filterName",
-        radioModel:"=radioModel",
-        radioChange:"&radioChange",
-        radioRepeat:"=radioRepeat",
-        clearClick:"&clearClick"
-      },
-      link: function(scope, element, attrs) {
-      }
-    };
-  }
-  function addClassDirective($window,$location) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        $(element).on('click',function(){
-          //$(element).removeClass('highlightClass');
-          $(this).addClass(attrs.addClass);
-
-        });
-
-      }
-    };
-  }
-  function siblingRemoveClassDirective($window,$location) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        $(element).on('click',function(){
-          $(this).siblings().removeClass(attrs.siblingRemoveClass);
-        });
-
-      }
-    };
-  }
-
-  function removeClassDirective($window,$location) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        $(element).on('click',function(){
-          $(this).siblings('.filterDirectiveRadioGroup').find('.filterRadioButton').removeClass(attrs.removeClass);
-        });
-
-      }
-    };
-  }
-
-
-})(window.angular);
-
-(function(angular){
-  angular.module('app.store')
-  .directive('scrollToId',['scrollToIdService',scrollToIdDirective]);
-
-  function scrollToIdDirective(scrollToIdService) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        $(element).on('click',function(){
-          scrollToIdService.scrollToId(attrs.scrollToId);
-        });
-      }
-    };
-  }
-
 
 })(window.angular);
 

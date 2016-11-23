@@ -20,7 +20,7 @@ angular.module('app.user')
       function openMenu($mdOpenMenu, ev) {
 	      originatorEv = ev;
 	      $mdOpenMenu(ev);
-		}
+		  }
       function createNewStore(){
         changeBrowserURL.changeBrowserURLMethod('/admin/createStore/'); 
       }

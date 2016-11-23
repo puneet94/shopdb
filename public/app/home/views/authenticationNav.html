@@ -2,7 +2,7 @@
 <div ng-controller='AuthController as ahc'>
   <div ng-if="ahc.isAuth" >
     <div ng-controller="UserActionListController as ualc">
-      <md-menu md-offset="-100 70" ">
+      <md-menu md-offset="-140 60" ">
         <div aria-label="Open phone interactions menu" class="md-icon-button userActivityButtonContainer" ng-click="ualc.openMenu($mdOpenMenu, $event)">
         
             <span>
@@ -19,22 +19,23 @@
           <md-menu-item>
             <md-button ng-click="ualc.getUserPage()">
               
-              My profile
+              {{ualc.user.displayName}}
             </md-button>
           </md-menu-item>
-          
+          <h3 class="menuHeading">My Stores</h3>
           <md-menu-item ng-repeat = "userStore in ualc.userStoresList">
+
             <md-button aria-label="User store" ng-click="ualc.getAdminStore(userStore._id)">
               {{userStore.name}}-{{userStore.address.locality}}
             </md-button>
           </md-menu-item>
           <md-menu-item>
-            <md-button class="md-raised" aria-label="Create new store" ng-click="ualc.createNewStore()">
+            <md-button  aria-label="Create new store" ng-click="ualc.createNewStore()">
               Create Store
             </md-button>
           </md-menu-item>
           <md-menu-item>
-            <md-button class="md-raised" aria-label="Logout" ng-click="ahc.authLogout()">
+            <md-button  aria-label="Logout" ng-click="ahc.authLogout()">
               Logout
             </md-button>
           </md-menu-item>
