@@ -21,8 +21,10 @@ function createProduct(req, res){
   item = req.body;
   product.name = item.name;
   product.description = item.description;
-  product.category = item.category.split(',');
-  product.subCategory = item.subCategory.split(',');
+  product.category = item.category.toLowerCase().split(',');
+  product.bannerImage = item.bannerImage;
+  product.productImages = item.productImages;
+  product.subCategory = item.subCategory.toLowerCase().split(',');
   price.value = item.price.value;
   price.currency = item.price.currency||'INR';
   product.price = price;

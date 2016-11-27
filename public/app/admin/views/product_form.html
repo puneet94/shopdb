@@ -1,7 +1,28 @@
 <div class="layout-column flex">
    <h2>Create Product</h2>
+
    <form name="myFrom" class="" style="">
       <div class="formItem  layout-column" >
+         <div class="productMainImage" style="background-image: url('{{csc.productForm.bannerImage}}')">
+      
+         </div>
+         <div>
+          <button class="imageUploadClick" type="file" ngf-select="csc.uploadProductImage($file, $invalidFiles)"
+          accept="image/*" ngf-max-height="1000" ngf-max-size="10MB">
+            Upload product image
+          </button>
+          </div>
+         <div>
+            <button ngf-select="csc.uploadMultipleImages($files)" multiple accept="image/*">Upload Images</button>
+            <br>
+
+            {{csc.errorMsg}}
+         </div>
+        </div>
+        <div layout="row" class="productImagesCollection">
+          <images-list-directive images-list="csc.productForm.productImages"></images-list-directive>  
+        </div>
+        
          <div>
             <md-input-container >
                <label >Product Name</label>

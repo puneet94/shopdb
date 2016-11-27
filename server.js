@@ -11,18 +11,19 @@ var moment = require('moment');
 var request = require('request');
 var jwt = require('jwt-simple');
 
-
-
 //Variables
 var port = process.env.PORT || 3000;
 var http = require('http');
 var app = express();
 var server = http.createServer(app);
 
+
+//moment added to be used in jade
+
+//app.locals.moment = require('moment');
 //Imports from custom made js
 var facebookAuth  = require('./services/facebookAuth.js');
 var createJWT = require('./services/jwtService.js');
-
 
 
 var storeRouter = require('./routes/store');
@@ -70,9 +71,7 @@ app.use('/upload',uploadRouter);
 app.use('/user',userRouter);
 app.use('/activity',activityRouter);
 app.use(express.static(__dirname + '/public'));
-/*app.get('/admin', function (req, res) {
-        res.send('admin'); // loadingle vile (angular will handle the page changes on the front-end)
-});*/
+
 app.get('*', function (req, res) {
         res.sendFile(__dirname + '/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
@@ -83,8 +82,3 @@ app.listen(app.get('port'),function(){
 	console.log("Listening");
 	console.log(__dirname);
 })
-/*
-server.listen(3000,'0.0.0.0',function(){
-  console.log("Listening");
-  console.log(__dirname);
-})*/

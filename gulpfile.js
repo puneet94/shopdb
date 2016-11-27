@@ -5,45 +5,26 @@ var autoprefixer = require('gulp-autoprefixer');
 var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
-var imagemin = require('gulp-imagemin'),
-    cache = require('gulp-cache');
+
+var    cache = require('gulp-cache');
 var minifycss = require('gulp-minify-css');
 var sass = require('gulp-sass');
-var browserSync = require('browser-sync');
+
 var nodemon = require('gulp-nodemon');
-/*
-gulp.task('browser-sync', function() {
-  browserSync({
-    server: {
-       baseDir: "./"
-    }
-  });
-});*/
-gulp.task('browser-sync', ['nodemon'], function() {
-	browserSync.init(null, {
-		proxy: "http://localhost:3000",
-        files: ["public/**/*.*"],
-        browser: "google chrome",
-        port: 7000,
-	});
-});
 gulp.task('nodemon', function (cb) {
 
-	var started = false;
+  var started = false;
 
-	return nodemon({
-		script: 'server.js'
-	}).on('start', function () {
-		// to avoid nodemon being started multiple times
-		// thanks @matthisk
-		if (!started) {
-			cb();
-			started = true;
-		}
-	});
-});
-gulp.task('bs-reload', function () {
-  browserSync.reload();
+  return nodemon({
+    script: 'server.js'
+  }).on('start', function () {
+    // to avoid nodemon being started multiple times
+    // thanks @matthisk
+    if (!started) {
+      cb();
+      started = true;
+    }
+  });
 });
 
 gulp.task('images', function(){
@@ -83,7 +64,7 @@ gulp.task('scripts', function(){
     .pipe(rename({suffix: '.min'}))
     .pipe(uglify())
     .pipe(gulp.dest('public/dist2/scripts/'))
-    .pipe(browserSync.reload({stream:true}))
+    
 });
 
 gulp.task('default', function(){

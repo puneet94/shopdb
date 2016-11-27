@@ -40,19 +40,7 @@ angular.module('app.admin',[]).config(['$routeProvider',
           redirectIfNotAuthenticated: redirectIfNotAuthenticated,
           redirectIfNotStoreAuthenticated: redirectIfNotStoreAuthenticated
         }
-      })/*.when('/store/storesCollection/category/:category/:location/:slug?', {
-        templateUrl: 'app/store/views/storesCategoryCollection.html',
-        controller: 'StoreCategoryCollectionController',
-        controllerAs: 'sccc'
-      }).when('/store/storesCollection/location/:location/:slug?', {
-        templateUrl: 'app/store/views/storesLocationCollection.html',
-        controller: 'StoreLocationCollectionController',
-        controllerAs: 'slcc'
-      }).when('/store/singleStore/:storeId/:myslug?', {
-        templateUrl: 'app/store/views/singleStore.html',
-        controller: 'SingleStoreController',
-        controllerAs: 'ssc'
-      })*/;
+      });
   }]);
 
 
@@ -113,8 +101,8 @@ angular
   function authConfig($routeProvider,$httpProvider,$authProvider) {
     //shopuae
     var fbClientId = '991629147629579';
-    //shoppinss
-    //var fbclientId = '1068203956594250';
+    //shopuae
+    //var fbClientId = '1068203956594250';
     var authenticateUrl = 'https://shopuae.herokuapp.com/authenticate';
     $routeProvider
       .when('/signup',{
@@ -137,7 +125,6 @@ angular
         clientId: fbClientId,
         url:authenticateUrl+'/auth/facebook'
       });
-      //$httpProvider.interceptors.push('authInterceptor');
   }
 })(window.angular);
 
@@ -149,7 +136,7 @@ angular.module('app.common',[]);
 
 //mongod.exe --storageEngine=mmapv1
 
-//https://www.npmjs.com/package/ng-file-upload#node
+
 
 //tvBBDUqIvQAAAAAAAAAACDM-ioz0dFLdYfD6B60bpAKBpHNB79L42WhumJM_DAYG dropbox access token
 
@@ -616,9 +603,10 @@ function innerLoadingDirective() {
         restrict: 'E',
         replace:true,
         scope:{
-          loading:"=innerLoading"
+          loading:"=innerLoading",
+          containerHeight:"@containerHeight"
         },
-        template: '<div class="innerSpinnerDiv"><div class="ajaxLoadingSpinner"></div></div>',
+        templateUrl: 'app/common/views/innerLoadingTemplate.html',
         link: function (scope, element, attr) {
               scope.$watch('loading', function (val) {
                   if (val)
@@ -626,6 +614,8 @@ function innerLoadingDirective() {
                   else
                       $(element).hide();
               });
+              
+              $('.innerLoadingContainer').height(scope.containerHeight);
         }
       };
   }
@@ -763,14 +753,59 @@ function innerLoadingDirective() {
 (function(angular){
   angular.module('app.admin')
 
-    .controller('CreateProductController',['$routeParams','adminProductService',CreateProductController]);
-    function CreateProductController($routeParams,adminProductService){
+    .controller('CreateProductController',['$routeParams','adminProductService','Upload','baseUrlService',CreateProductController]);
+    function CreateProductController($routeParams,adminProductService,Upload,baseUrlService){
     	var csc = this;
     	csc.productForm = {};
         csc.productForm.price = {};
     	activate();
     	csc.createProduct = createProduct;
+
+        csc.uploadMultipleImages = function (files) {
+        csc.files = files;
+        angular.forEach(files, function(file) {
+            file.upload = Upload.upload({
+                url: baseUrlService.baseUrl+'upload/singleUpload',
+                data: {file: file}
+            });
+
+            file.upload.then(function (response) {
+                $timeout(function () {
+                    file.result = response.data;
+                    console.log(response.data);
+                    csc.productForm.productImages.push(response.data);
+                });
+            }, function (response) {
+                if (response.status > 0)
+                    csc.errorMsg = response.status + ': ' + response.data;
+            }, function (evt) {
+                file.progress = Math.min(100, parseInt(100.0 * 
+                                         evt.loaded / evt.total));
+            });
+        });
         
+    };
+        csc.uploadProductImage = function(file, errFiles) {
+          console.log("Enterd file uploading");
+          csc.f = file;
+          csc.errFile = errFiles && errFiles[0];
+          if (file) {
+              file.upload = Upload.upload({
+                  url: baseUrlService.baseUrl+'upload/singleUpload',
+                  data: {file: file}
+              });
+              csc.spinnerLoading = true;
+              file.upload.then(function (response) {
+                  
+                      file.result = response.data;
+                      csc.productForm.bannerImage = response.data;
+                      console.log(response.data);
+                      $('.productMainImage').css('background-image','url('+response.data+')');
+                      
+              });
+          }
+      };
+
     	function createProduct(){
     		adminProductService.createProduct(csc.productForm,$routeParams.storeId)
 	    		.then(function(response){
@@ -1567,7 +1602,8 @@ function SearchBoxController($scope,$http,$routeParams,cityStorage,citiesService
 			hm.selectedItem = cityStorage.getCity();
 		}
 		else{
-			hm.selectedItem = 'hyderabad';
+
+			hm.selectedItem = 'dubai';
 		}
 		activate();
 		hm.userSearches = [];
@@ -1578,7 +1614,6 @@ function SearchBoxController($scope,$http,$routeParams,cityStorage,citiesService
 
 		hm.selectedItemChange(hm.selectedItem);
 		function userSearchItemChange(item){
-
 
 			var changeEntity = item.userSearchString.split("#&#")[1];
 			var entityName = item.userSearchString.split("#&#")[0];
@@ -1623,40 +1658,36 @@ function SearchBoxController($scope,$http,$routeParams,cityStorage,citiesService
 				locationStoresSearchUrl();
 			}
 
-
 			changeBrowserURL.changeBrowserURLMethod(hm.url+entityName+"/"+location+"/"+hm.slug);
-			console.log(hm.url+entityName+"/"+location+"/"+hm.slug);
 
 
 		}
 		//md-search-text-change="sbc.searchTextChange(sbc.searchText)"
 		function userSearchTextChange(city,userSearchText){
-			console.log(userSearchText);
-			console.log(city);
 			if(userSearchText.length>=2){
 				searchService.getAjaxSearches(city,userSearchText)
 					.then(function(resource){
 						hm.loading = true;
-				console.log("the resource");
-				console.log(resource);
-				hm.userSearches = [];
-				var allStoresItem = {"userSearchString":"#&#All stores in #&#"+hm.selectedItem};
-				var allProductsItem = {"userSearchString":"#&#All products in #&#"+hm.selectedItem};
-				hm.userSearches = [allStoresItem,allProductsItem];
-				for (var i = resource.data.length - 1; i >= 0; i--) {
-					hm.userSearches.push(resource.data[i]);
-				}
-				hm.loading = false;
+						hm.userSearches = [];
+						var allStoresItem = {"userSearchString":"#&#All stores in #&#"+hm.selectedItem};
+						var allProductsItem = {"userSearchString":"#&#All products in #&#"+hm.selectedItem};
+						hm.userSearches = [allStoresItem,allProductsItem];
+						for (var i = resource.data.length - 1; i >= 0; i--) {
+							hm.userSearches.push(resource.data[i]);
+						}
+						hm.loading = false;
 					});
+			}
+			else{
+				if(hm.selectedItem){
+					selectedItemChange(hm.selectedItem);
+				}
 			}
 		}
 		function selectedItemChange(item){
 			hm.loading = true;
-			//userLocationService.setUserLocation(item);
 			cityStorage.setCity(item);
 			searchService.getSearches(item).then(function(resource){
-				console.log("the resource");
-				console.log(resource);
 				var allStoresItem = {"userSearchString":"#&#All stores in #&#"+hm.selectedItem};
 				var allProductsItem = {"userSearchString":"#&#All products in #&#"+hm.selectedItem};
 				hm.userSearches = [allStoresItem,allProductsItem];
@@ -2058,6 +2089,14 @@ angular.module('app.review')
     plc.deleteUserReviewUpvote = deleteUserReviewUpvote;
     plc.getUserPage = userData.getUserPage;
 
+    plc.reviewParams = {};
+    plc.reviewParams.getRating = getRating;
+    plc.reviewParams.userReviewUpvoted = userReviewUpvoted;
+    plc.reviewParams.submitUserReviewUpvote = submitUserReviewUpvote;
+    plc.reviewParams.deleteUserReviewUpvote = deleteUserReviewUpvote;
+    plc.reviewParams.smallLoadingModel = plc.smallLoadingModel;
+    plc.reviewParams.getRating = getRating;
+
     if(plc.authCheck){
       plc.userUpvotes  = userData.getUser().upvotes;
     }
@@ -2204,6 +2243,16 @@ angular.module('app.review')
     slc.submitUserReviewUpvote = submitUserReviewUpvote;
     slc.deleteUserReviewUpvote = deleteUserReviewUpvote;
     slc.getUserPage = userData.getUserPage;
+
+    //parameter for review directive
+    slc.reviewParams = {};
+    slc.reviewParams.getRating = getRating;
+    slc.reviewParams.userReviewUpvoted = userReviewUpvoted;
+    slc.reviewParams.submitUserReviewUpvote = submitUserReviewUpvote;
+    slc.reviewParams.deleteUserReviewUpvote = deleteUserReviewUpvote;
+    slc.reviewParams.smallLoadingModel = slc.smallLoadingModel;
+    slc.reviewParams.getRating = getRating;
+
     
     if(slc.authCheck){
       slc.userUpvotes  = userData.getUser().upvotes;
@@ -2233,7 +2282,6 @@ angular.module('app.review')
     }
 
     function userReviewUpvoted(locReview){
-      
       var upArr = locReview.upvotes;
       for(var i=0;i<upArr.length;i++){
         if(slc.userUpvotes.indexOf(upArr[i])!=-1){
@@ -2293,6 +2341,16 @@ angular.module('app.review')
     url.getUserPage = userData.getUserPage;
     url.getSingleStorePage = getSingleStore.getSingleStorePage;
     url.getSingleProductPage = getProductsService.getSingleProductPage;
+
+
+    url.reviewParams = {};
+    url.reviewParams.getRating = getRating;
+    url.reviewParams.userReviewUpvoted = userReviewUpvoted;
+    url.reviewParams.submitUserReviewUpvote = submitUserReviewUpvote;
+    url.reviewParams.deleteUserReviewUpvote = deleteUserReviewUpvote;
+    url.reviewParams.smallLoadingModel = url.smallLoadingModel;
+    url.reviewParams.getRating = getRating;
+    
     if(url.authCheck){
       url.userUpvotes  = userData.getUser().upvotes;
     }
@@ -2308,7 +2366,7 @@ angular.module('app.review')
     function getUserReviews(){
       reviewService.getUserReviews().then(function(res){
         url.reviewList = res.data;
-
+        
       },function(res){
 
       });
@@ -2367,6 +2425,27 @@ angular.module('app.review')
 
 (function(angular){
   'use strict';
+angular.module('app.review')
+
+  .directive('singleReviewDirective',['$auth',singleReviewDirective]);
+  function singleReviewDirective($auth){    
+    return {
+      replace: true,
+      scope:{
+        
+        reviewParams: "=reviewParams",
+        review: "=review"
+      },
+      templateUrl: 'app/reviews/views/singleReviewTemplate.html',
+      link: function($scope){
+        $scope.authCheck = $auth.isAuthenticated();
+      }
+    };
+  }
+})(window.angular);
+
+(function(angular){
+  'use strict';
   angular.module('app.review')
       .service('reviewService',['$http','$routeParams','baseUrlService',ReviewService]);
       function ReviewService($http,$routeParams,baseUrlService){
@@ -2412,786 +2491,6 @@ angular.module('app.review')
 })(window.angular);
 
 (function(angular){
-  angular.module('app.store')
-  .directive('filterDirective',["$window","$location", filterDirective])
-  .directive('addClass',["$window","$location", addClassDirective])
-  .directive('removeClass',["$window","$location", removeClassDirective])
-  .directive('siblingRemoveClass',["$window","$location", siblingRemoveClassDirective]);
-  function filterDirective($window,$location) {
-    return {
-      restrict: 'E',
-      templateUrl:'app/store/views/filterDirectiveTemplate.html',
-      scope:{
-        filterName:"@filterName",
-        radioModel:"=radioModel",
-        radioChange:"&radioChange",
-        radioRepeat:"=radioRepeat",
-        clearClick:"&clearClick"
-      },
-      link: function(scope, element, attrs) {
-      }
-    };
-  }
-  function addClassDirective($window,$location) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        $(element).on('click',function(){
-          //$(element).removeClass('highlightClass');
-          $(this).addClass(attrs.addClass);
-
-        });
-
-      }
-    };
-  }
-  function siblingRemoveClassDirective($window,$location) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        $(element).on('click',function(){
-          $(this).siblings().removeClass(attrs.siblingRemoveClass);
-        });
-
-      }
-    };
-  }
-
-  function removeClassDirective($window,$location) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        $(element).on('click',function(){
-          $(this).siblings('.filterDirectiveRadioGroup').find('.filterRadioButton').removeClass(attrs.removeClass);
-        });
-
-      }
-    };
-  }
-
-
-})(window.angular);
-
-(function(angular){
-  angular.module('app.store')
-  .directive('scrollToId',['scrollToIdService',scrollToIdDirective]);
-
-  function scrollToIdDirective(scrollToIdService) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        $(element).on('click',function(){
-          scrollToIdService.scrollToId(attrs.scrollToId);
-        });
-      }
-    };
-  }
-
-
-})(window.angular);
-
-(function(angular){
-  'use strict';
-angular.module('app.store')
-
-  .controller('SingleStoreController',["$scope","$auth",'$location','scrollToIdService',"$routeParams","storeData","getSingleStore",'$mdDialog',SingleStoreController]);
-  function SingleStoreController($scope,$auth,$location,scrollToIdService,$routeParams,storeData,getSingleStore,$mdDialog){
-    var ssc = this;
-    ssc.storeData = {};
-    ssc.loading = true;
-    ssc.authCheck = $auth.isAuthenticated();
-    ssc.getAddressString = getAddressString;
-    
-    ssc.storeImagesObj = [];
-    function getAddressString(){
-      return Object.keys(ssc.storeData.address).map(function(key){return ssc.storeData.address[key];}).join(' ');
-    }
-     $scope.showAlert = function(ev) {
-    // Appending dialog to document.body to cover sidenav in docs app
-    // Modal dialogs should fully cover application
-    // to prevent interaction outside of dialog
-    $mdDialog.show(
-      $mdDialog.alert()
-        .parent(angular.element(document.querySelector('#popupContainer')))
-        .clickOutsideToClose(true)
-        .title('Claim Business')
-        .textContent('If you are the owner of this store,then mail to us at shoppinsmail@gmail.com')
-        .ariaLabel('Alert Dialog Demo')
-        .ok('Got it!')
-        .targetEvent(ev)
-    );
-  };
-    getSingleStore.getStore($routeParams.storeId)
-    .then(function(res){
-      storeData.setStore(res.data);
-        ssc.storeData = res.data;
-        for (var i = 0; i < ssc.storeData.storeImages.length; i++) {
-          var obj = {};
-          obj.src=ssc.storeData.storeImages[i];
-          ssc.storeImagesObj.push(obj);
-        }
-        //ssc.showImagesCarousel = true;
-        console.log(ssc.storeImagesObj);
-        ssc.loading = false;
-        if($location.search().param){
-            scrollToIdService.scrollToId($location.search().param);
-        }
-      });
-    getSingleStore.getStoreRating($routeParams.storeId)
-    .then(function(res){
-      ssc.storeData.storeRatingAvg = res.data;
-    });
-
-    }
-
-})(window.angular);
-
-(function(angular){
-  angular.module('app.store')
-
-    .controller('StoreCategoryCollectionController',["$scope","$routeParams","getCityLocalitiesService","getCityCategoriesService",StoreCategoryCollectionController]);
-
-    function StoreCategoryCollectionController($scope,$routeParams,getCityLocalitiesService,getCityCategoriesService){
-      var slcc = this;
-      slcc.areaModel = {};
-      slcc.launchFilterEvent = launchFilterEvent;
-      slcc.areaRadioClicked = areaRadioClicked;
-      slcc.majorFilter = {};
-      slcc.clearAreaFilters = clearAreaFilters;
-      function areaRadioClicked(){
-        
-        slcc.majorFilter.area=slcc.areaModel.area;
-        launchFilterEvent(slcc.majorFilter);
-      }
-      function clearAreaFilters(){
-        delete slcc.majorFilter.area;
-        slcc.areaModel = {};
-        launchFilterEvent(slcc.majorFilter);
-      }
-
-      var location = $routeParams.location;
-      getCityLocalitiesService.getCityLocalities(location)
-        .then(function(res){
-          slcc.areas = res.data;
-        },function(res){
-
-        });
-        getCityCategoriesService.getCityCategories(location)
-          .then(function(res){
-            slcc.categories = res.data;
-
-          },function(res){
-            console.log(res);
-          });
-      function launchFilterEvent(obj){
-          $scope.$broadcast('parent', obj);
-      }
-    }
-
-})(window.angular);
-
-(function(angular){
-
-
-  angular.module('app.store')
-    .controller('StoreController',["baseUrlService","$http",storeController]);
-  function storeController(baseUrlService,$http){
-    var sm = this;
-
-    sm.address = {};
-    sm.SendData = function () {
-      data = {};
-      data.name = sm.name;
-      data.city = sm.address.city;
-      data.address = sm.address;
-      data.category = sm.categoryString.split(",");
-
-      var config = {
-        headers : {
-          'Content-Type': 'application/json'
-      }
-    };
-    $http.post(baseUrlService.baseUrl+"store/store", data, config)
-      .then(
-        function(response){
-        },
-        function(response){
-          console.log(response);
-        }
-      );
-    };
-  }
-})(window.angular);
-
-(function(angular){
-  'use strict';
-
-  angular.module('app.store')
-
-    .controller('StoreListController',["$scope","$routeParams","changeBrowserURL","$location","baseUrlService","getStoreCollectionService",StoreListController]);
-
-
-    function StoreListController($scope,$routeParams,changeBrowserURL,$location,baseUrlService,getStoreCollectionService){
-      var slc = this;
-      slc.pageNo = 0;
-      slc.storesList = [];
-      slc.getSingleStore = getSingleStore;
-      slc.getStoresCollection = getStoresCollection;
-      slc.storesSearchHeader = $routeParams.slug;
-      activate();
-      $scope.$on('parent', function (event, data) {
-        slc.pageNo = 0;
-        slc.paramData = data;
-        slc.getStoresCollection();
-      });
-      function getSingleStore(store,scrollId){
-        var url = "store/singleStore/"+store._id+"/"+store.myslug;
-        if(scrollId){
-          //url = url + "?scrollId="+scrollId;
-          changeBrowserURL.changeBrowserURLMethod(url,scrollId);
-        }
-        changeBrowserURL.changeBrowserURLMethod(url);
-      }
-      function getStoresCollection(){
-        slc.loading = true;
-        slc.pageNo = slc.pageNo + 1;
-        var location = $routeParams.location;
-        var url ='';
-        if($location.absUrl().indexOf("/category/")!=-1){
-          var category = $routeParams.category;
-           url = 'store/storesCollection/category/'+category+'/'+location+'/'+slc.pageNo;
-        }
-        else if($location.absUrl().indexOf("/storeName/")!=-1){
-          var storeName = $routeParams.storeName;
-           url = 'store/storesCollection/storeName/'+storeName+'/'+location+'/'+slc.pageNo;
-        }
-        else{
-           url = 'store/storesCollection/stores'+'/'+location+'/'+slc.pageNo;
-        }
-        /*
-          * This will work with mongoose-paginate only because the existencce of the button
-            in html is dependant on the total documents retrieved
-          * I check the total documents available to the length of array displayed.. if they both are equal
-            then the button is hidden
-        */
-        getStoreCollectionService.getStoreCollection(url,slc.paramData)
-        .then(function(response){
-          slc.totalStores = response.data.total;
-          console.log(response);
-          if(slc.storesList.length===0){
-            var tempStoreList = [];
-            for (var i = response.data.docs.length - 1; i >= 0; i--) {
-              tempStoreList.push(response.data.docs[i]);
-
-            }
-            slc.storesList = tempStoreList;
-          }
-          else{
-
-            if(slc.paramData&&slc.pageNo==1){
-              slc.storesList = [];
-            }
-            for (var j = response.data.docs.length - 1; j >= 0; j--) {
-              slc.storesList.push(response.data.docs[j]);
-            }
-
-          }
-          slc.loading = false;
-        },function(response){
-          console.log(response);
-        });
-      }
-      function activate(){
-        slc.getStoresCollection();
-      }
-
-    }
-
-})(window.angular);
-
-(function(angular){
-  angular.module('app.store')
-    .controller('StoreLocationCollectionController',["$scope","$routeParams","getCityLocalitiesService","getCityCategoriesService",StoreLocationCollectionController]);
-
-  function StoreLocationCollectionController($scope,$routeParams,getCityLocalitiesService,getCityCategoriesService){
-    var slcc = this;
-    slcc.areaModel = {};
-    slcc.categoryModel = {};
-    slcc.launchFilterEvent = launchFilterEvent;
-    slcc.areaRadioClicked = areaRadioClicked;
-    slcc.categoryRadioClicked = categoryRadioClicked;
-    slcc.majorFilter = {};
-    slcc.clearAreaFilters = clearAreaFilters;
-    slcc.clearCategoryFilters = clearCategoryFilters;
-    function areaRadioClicked(){
-      slcc.majorFilter.area=slcc.areaModel.area;
-      launchFilterEvent(slcc.majorFilter);
-    }
-    function clearAreaFilters(){
-      delete slcc.majorFilter.area;
-      slcc.areaModel = {};
-      launchFilterEvent(slcc.majorFilter);
-    }
-    function categoryRadioClicked(){
-      slcc.majorFilter.category=slcc.categoryModel.category;
-      launchFilterEvent(slcc.majorFilter);
-    }
-    function clearCategoryFilters(){
-      delete slcc.majorFilter.category;
-      slcc.categoryModel = {};
-      launchFilterEvent(slcc.majorFilter);
-    }
-    var location = $routeParams.location;
-    getCityLocalitiesService.getCityLocalities(location)
-      .then(function(res){
-        slcc.areas = res.data;
-      },function(res){
-        
-      });
-      getCityCategoriesService.getCityCategories(location)
-        .then(function(res){
-          slcc.categories = res.data;
-          
-        },function(res){
-          console.log(res);
-        });
-    function launchFilterEvent(obj){
-        $scope.$broadcast('parent', obj);
-    }
-
-  }
-})(window.angular);
-
-(function(angular){
-  angular.module('app.store')
-
-    .controller('StoreNameCollectionController',[storeNameCollectionController]);
-    function storeNameCollectionController(){
-    	
-    }
-})(window.angular);
-
-(function(angular){
-  angular.module('app.store')
-
-    .controller('UserStoreFollowController',["$scope","$auth","$routeParams","userData","userFollowService",UserStoreFollowController]);
-
-    function UserStoreFollowController($scope,$auth,$routeParams,userData,userFollowService){
-      var usu = this;
-      usu.follow = {};
-      usu.followCheck = false;
-      usu.getFollowParamObj = {};
-      usu.submitFollow = submitFollow;
-      usu.deleteFollow = deleteFollow;
-      usu.getFollowParamObj.userId = userData.getUser()._id;
-      usu.userStoreFollowed = false;
-
-      activate();      
-      function userStoreFollowed(){        
-      }
-      function submitFollow(){
-        userFollowService.submitFollow(usu.follow)
-            .then(function(res){
-                    usu.userStoreFollowed = true;
-                    userData.setUser();
-                    
-                  },
-                  function(res){
-                    console.log(res);
-                  });
-      }
-      function deleteFollow(){
-        userFollowService.deleteFollow(usu.follow)
-            .then(function(res){
-              usu.userStoreFollowed = false;
-              userData.setUser();
-              
-             
-            },
-              function(res)
-              {
-                console.log(res);
-              });
-      }
-      
-      function activate(){
-       
-       usu.follow.userId = userData.getUser()._id;
-        if($routeParams.storeId){
-        usu.entity = $routeParams.storeId;
-        usu.follow.storeId = $routeParams.storeId;
-        
-      }
-      else if($routeParams.productId){
-        usu.entity = $routeParams.productId;
-        usu.follow.productId = $routeParams.productId;
-        usu.getFollowParamObj.productId = $routeParams.productId;
-      }
-      if($auth.isAuthenticated()){
-        if(userData.getUser().storeFollowing.indexOf($routeParams.storeId)!=-1){
-          usu.userStoreFollowed = true;
-        }
-        
-      }
-      }
-
-    }
-
-})(window.angular);
-
-(function(angular){
-  angular.module('app.store')
-
-    .controller('UserStoreUpvoteController',["$scope","$auth","$routeParams","userData","userUpvoteService",'storeData',UserStoreUpvoteController]);
-
-    function UserStoreUpvoteController($scope,$auth,$routeParams,userData,userUpvoteService,storeData){
-      var usu = this;
-      usu.upvote = {};
-      usu.upvoteCheck = false;
-      usu.getUpvoteParamObj = {};
-      usu.submitUpvote = submitUpvote;
-      usu.deleteUpvote = deleteUpvote;
-      usu.getUpvoteParamObj.userId = userData.getUser()._id;
-      usu.userStoreUpvoted = false;
-
-      activate();      
-      function userStoreUpvoted(){        
-      }
-      function submitUpvote(){
-        userUpvoteService.submitUpvote(usu.upvote)
-            .then(function(res){
-                    usu.userStoreUpvoted = true;
-                    userData.setUser();
-                    
-                  },
-                  function(res){
-                    console.log(res);
-                  });
-      }
-      function deleteUpvote(){
-        userUpvoteService.deleteUpvote(usu.upvoteId)
-            .then(function(res){
-              usu.userStoreUpvoted = false;
-              userData.setUser();
-            },
-              function(res)
-              {
-                console.log(res);
-              });
-      }
-      
-      function activate(){
-        usu.upvote.userId = userData.getUser()._id;
-        if($routeParams.storeId){
-          usu.upvote.storeId = $routeParams.storeId;
-          usu.upvote.type="store";
-        }
-        else if($routeParams.productId){
-          usu.upvote.type="product";
-          usu.upvote.productId = $routeParams.productId;
-        
-        }
-        if($auth.isAuthenticated()){
-          var currentStore = storeData.getStore();
-          var currentUser = userData.getUser();
-          for (var i = 0; i < currentStore.upvotes.length; i++) {
-            for (var j = 0; j < currentUser.upvotes.length; j++) {
-              if(currentStore.upvotes[i] == currentUser.upvotes[j]){
-                usu.userStoreUpvoted = true;
-                usu.upvoteId = currentStore.upvotes[i];
-                console.log(usu.upvoteId);
-              }
-            }
-            
-          }
-        }
-      }
-
-    }
-
-})(window.angular);
-
-(function(angular){
-  angular.module('app.store')
-
-    .controller('UserStoreVisitController',["$scope","$auth","$routeParams","userData","userVisitService",UserStoreVisitController]);
-
-    function UserStoreVisitController($scope,$auth,$routeParams,userData,userVisitService){
-      var usv = this;
-      usv.visit = {};
-      usv.visitCheck = false;
-      usv.getVisitParamObj = {};
-      usv.submitVisit = submitVisit;
-      usv.deleteVisit = deleteVisit;
-      usv.getVisitParamObj.userId = userData.getUser()._id;
-      usv.userStoreVisited = false;
-
-      activate();      
-      function userStoreVisited(){        
-      }
-      function submitVisit(){
-        userVisitService.submitVisit(usv.visit)
-            .then(function(res){
-                    userData.setUser();
-                    usv.userStoreVisited = true;
-                  },
-                  function(res){
-                    console.log(res);
-                  });
-      }
-      function deleteVisit(){
-        userVisitService.deleteVisit(usv.visit)
-            .then(function(res){
-              
-              userData.setUser();
-              usv.userStoreVisited = false;
-             
-            },
-              function(res)
-              {
-                console.log(res);
-              });
-      }
-      
-      function activate(){
-       
-       usv.visit.userId = userData.getUser()._id;
-        if($routeParams.storeId){
-        usv.entity = $routeParams.storeId;
-        usv.visit.storeId = $routeParams.storeId;
-        usv.getVisitParamObj.storeId = $routeParams.storeId;
-        
-      }
-      else if($routeParams.productId){
-        usv.entity = $routeParams.productId;
-        usv.visit.productId = $routeParams.productId;
-        usv.getVisitParamObj.productId = $routeParams.productId;
-      }
-      if($auth.isAuthenticated()){
-        userVisitService.getVisit(usv.visit)
-            .then(function(res){
-              
-              
-              if(res.data[0]){
-              if(res.data[0]._id){
-              
-                usv.userStoreVisited = true;
-              }}
-              
-             
-            },
-              function(res)
-              {
-                console.log(res);
-              });
-      }
-      }
-
-    }
-
-})(window.angular);
-
-(function(angular){
-  'use strict';
-
-angular.module('app.store')
-  .service('getStoreCollectionService',["$http","storeData","baseUrlService",GetStoreCollectionService]);
-
-/*
-  * This servic has a function to get collection of stores`
-*/
-function GetStoreCollectionService($http,storeData,baseUrlService){
-  this.getStoreCollection = getStoreCollection;
-
-  function getStoreCollection(url,paramData){
-    return $http.get(baseUrlService.baseUrl+url,{params:paramData});
-
-  }
-}
-})(window.angular);
-
-(function(angular){
-  'use strict';
-/*
-  *Service for getting a single store with its id
-*/
-angular.module('app.store')
-  .service('getSingleStore',["$http","storeData","baseUrlService","changeBrowserURL",GetSingleStoreWithId]);
-
-/*
-  * This servic has a function names getStore which takes id as parameter and returns a promise
-*/
-function GetSingleStoreWithId($http,storeData,baseUrlService,changeBrowserURL){
-  this.getStore = getStore;
-  this.getStoreRating = getStoreRating;
-  this.getSingleStorePage = getSingleStorePage;
-  function getStore(id){
-    return $http.get(baseUrlService.baseUrl+"store/singleStore/"+id);
-    
-  }
-  function getStoreRating(id){
-  	return $http.get(baseUrlService.baseUrl+"review/ratings/store/"+id);
-  }
-  function getSingleStorePage(store,scrollId){
-        var url = "store/singleStore/"+store._id+"/"+(store.myslug || ' ');
-        if(scrollId){
-          //url = url + "?scrollId="+scrollId;
-          changeBrowserURL.changeBrowserURLMethod(url,scrollId);
-        }
-        changeBrowserURL.changeBrowserURLMethod(url);
-      }
-
-}
-})(window.angular);
-
-
-
-
-(function(angular){
-  'use strict';
-/*
-  *Service for getting a single store with its id
-*/
-angular.module('app.store')
-  .service('scrollToIdService',[ScrollToIdService]);
-
-/*
-  * This servic has a function names getStore which takes id as parameter and returns a promise
-*/
-function ScrollToIdService(){
-  this.scrollToId = scrollToId;
-
-  function scrollToId(blockId){
-    var container = $('body');
-    console.log('Inside the service of scroll');
-
-    var scrollTo = $('#'+blockId);
-    console.log(scrollTo);
-    container.animate({
-        scrollTop: scrollTo.offset().top //- container.offset().top + container.scrollTop()
-    });
-  }
-}
-})(window.angular);
-
-(function(angular){
-  'use strict';
-
-angular.module('app.store')
-  .factory('storeData',["$window",storeData]);
-
-/*
-  * This factory is used to get store details from window storage
-*/
-function storeData($window) {
-  var storage = $window.localStorage;
-  var obj1 = {
-    setStore: function (store) {
-        storage.setItem('store',JSON.stringify(store));
-    },
-    getStore: function(){
-      return JSON.parse(storage.getItem('store'));
-    },
-    removeStore: function(){
-
-      storage.removeItem('store');
-    }
-  };
-    return obj1;
-  }
-
-
-
-})(window.angular);
-
-(function(angular){
-  'use strict';
-/*
-  *Service for getting a single store with its id
-*/
-angular.module('app.store')
-  .service('userFollowService',["$http","baseUrlService",UserFollowService]);
-
-/*
-  * This servic has a function names getStore which takes id as parameter and returns a promise
-*/
-function UserFollowService($http,baseUrlService){
-  this.submitFollow = submitFollow;
-  this.deleteFollow = deleteFollow;
-  this.getFollow = getFollow;
-
-  function getFollow(followData){
-    return $http.get(baseUrlService.baseUrl+"follow/followed",{"params":followData});
-  }
-
-  function submitFollow(followData){
-    return $http.post(baseUrlService.baseUrl+"store/submitStoreFollow",followData);
-  }
-  function deleteFollow(followObj){
-    return $http.post(baseUrlService.baseUrl+"store/deleteStoreFollow",followObj);
-  }
-}
-})(window.angular);
-
-(function(angular){
-  'use strict';
-/*
-  *Service for getting a single store with its id
-*/
-angular.module('app.store')
-  .service('userUpvoteService',["$http","baseUrlService",UserUpvoteService]);
-
-/*
-  * This servic has a function names getStore which takes id as parameter and returns a promise
-*/
-function UserUpvoteService($http,baseUrlService){
-  this.submitUpvote = submitUpvote;
-  this.deleteUpvote = deleteUpvote;
-  this.getUpvote = getUpvote;
-
-  function getUpvote(upvoteData){
-    return $http.get(baseUrlService.baseUrl+"upvote/upvoted",{"params":upvoteData});
-  }
-
-  function submitUpvote(upvoteData){
-    return $http.post(baseUrlService.baseUrl+"upvote/upvotes/storeUpvote",upvoteData);
-  }
-  function deleteUpvote(upvoteId){
-    return $http.delete(baseUrlService.baseUrl+"upvote/upvotes/"+upvoteId);//{"params":upvoteObj});
-  }
-}
-})(window.angular);
-
-(function(angular){
-  'use strict';
-/*
-  *Service for getting a single store with its id
-*/
-angular.module('app.store')
-  .service('userVisitService',["$http","baseUrlService",UserVisitService]);
-
-/*
-  * This servic has a function names getStore which takes id as parameter and returns a promise
-*/
-function UserVisitService($http,baseUrlService){
-  this.submitVisit = submitVisit;
-  this.deleteVisit = deleteVisit;
-  this.getVisit = getVisit;
-
-  function getVisit(visitData){
-    return $http.get(baseUrlService.baseUrl+"visit/visited",{"params":visitData});
-  }
-
-  function submitVisit(visitData){
-    return $http.post(baseUrlService.baseUrl+"visit/visits/store",visitData);
-  }
-  function deleteVisit(visitObj){
-    return $http.delete(baseUrlService.baseUrl+"visit/visits/",{"params":visitObj});
-  }
-}
-})(window.angular);
-
-(function(angular){
   'use strict';
 angular.module('app.user')
 
@@ -3231,16 +2530,16 @@ angular.module('app.user')
       ual.loading = true;
       if(ual.authCheck){
         activityService.getUserFollowingActivity($auth.getPayload().sub).then(function(result){
-        ual.activityData= result.data;
-        ual.loading = false;
+       ual.activityData= result.data;
+       ual.loading = false;
       });  
       }
       else{
        activityService.getAllActivity().then(function(result){
         console.log("from the activity");
         console.log(result);
-        ual.activityData= result.data;
-        ual.loading = false;
+       ual.activityData= result.data;
+       ual.loading = false;
       }); 
       }
       
@@ -3546,5 +2845,780 @@ function UserService($http,baseUrlService){
 
 
 
+}
+})(window.angular);
+
+(function(angular){
+  'use strict';
+angular.module('app.store')
+
+  .controller('SingleStoreController',["$scope","$auth",'$location','scrollToIdService',"$routeParams","storeData","getSingleStore",'$mdDialog',SingleStoreController]);
+  function SingleStoreController($scope,$auth,$location,scrollToIdService,$routeParams,storeData,getSingleStore,$mdDialog){
+    var ssc = this;
+    ssc.storeData = {};
+    ssc.loading = true;
+    ssc.authCheck = $auth.isAuthenticated();
+    ssc.getAddressString = getAddressString;
+    ssc.storeImagesObj = [];
+    function getAddressString(){
+      return Object.keys(ssc.storeData.address).map(function(key){return ssc.storeData.address[key];}).join(' ');
+    }
+     $scope.showAlert = function(ev) {
+    
+    $mdDialog.show(
+      $mdDialog.alert()
+        .parent(angular.element(document.querySelector('#popupContainer')))
+        .clickOutsideToClose(true)
+        .title('Claim Business')
+        .textContent('If you are the owner of this store,then mail to us at shopuaemail@gmail.com')
+        .ariaLabel('Alert Dialog Demo')
+        .ok('Got it!')
+        .targetEvent(ev)
+    );
+  };
+    getSingleStore.getStore($routeParams.storeId)
+    .then(function(res){
+      storeData.setStore(res.data);
+        ssc.storeData = res.data;
+        for (var i = 0; i < ssc.storeData.storeImages.length; i++) {
+          var obj = {};
+          obj.src=ssc.storeData.storeImages[i];
+          ssc.storeImagesObj.push(obj);
+        }
+        
+        ssc.loading = false;
+        if($location.search().param){
+            scrollToIdService.scrollToId($location.search().param);
+        }
+      });
+    getSingleStore.getStoreRating($routeParams.storeId)
+    .then(function(res){
+      ssc.storeData.storeRatingAvg = res.data;
+    });
+
+    }
+
+})(window.angular);
+
+(function(angular){
+  angular.module('app.store')
+
+    .controller('StoreCategoryCollectionController',["$scope","$routeParams","getCityLocalitiesService","getCityCategoriesService",StoreCategoryCollectionController]);
+
+    function StoreCategoryCollectionController($scope,$routeParams,getCityLocalitiesService,getCityCategoriesService){
+      var slcc = this;
+      slcc.areaModel = {};
+      slcc.launchFilterEvent = launchFilterEvent;
+      slcc.areaRadioClicked = areaRadioClicked;
+      slcc.majorFilter = {};
+      slcc.clearAreaFilters = clearAreaFilters;
+      function areaRadioClicked(){
+        
+        slcc.majorFilter.area=slcc.areaModel.area;
+        launchFilterEvent(slcc.majorFilter);
+      }
+      function clearAreaFilters(){
+        delete slcc.majorFilter.area;
+        slcc.areaModel = {};
+        launchFilterEvent(slcc.majorFilter);
+      }
+
+      var location = $routeParams.location;
+      getCityLocalitiesService.getCityLocalities(location)
+        .then(function(res){
+          slcc.areas = res.data;
+        },function(res){
+
+        });
+        getCityCategoriesService.getCityCategories(location)
+          .then(function(res){
+            slcc.categories = res.data;
+
+          },function(res){
+            console.log(res);
+          });
+      function launchFilterEvent(obj){
+          $scope.$broadcast('parent', obj);
+      }
+    }
+
+})(window.angular);
+
+(function(angular){
+
+
+  angular.module('app.store')
+    .controller('StoreController',["baseUrlService","$http",storeController]);
+  function storeController(baseUrlService,$http){
+    var sm = this;
+
+    sm.address = {};
+    sm.SendData = function () {
+      data = {};
+      data.name = sm.name;
+      data.city = sm.address.city;
+      data.address = sm.address;
+      data.category = sm.categoryString.split(",");
+
+      var config = {
+        headers : {
+          'Content-Type': 'application/json'
+      }
+    };
+    $http.post(baseUrlService.baseUrl+"store/store", data, config)
+      .then(
+        function(response){
+        },
+        function(response){
+          console.log(response);
+        }
+      );
+    };
+  }
+})(window.angular);
+
+(function(angular){
+  'use strict';
+
+  angular.module('app.store')
+
+    .controller('StoreListController',["$scope","$routeParams","changeBrowserURL","$location","baseUrlService","getStoreCollectionService",StoreListController]);
+
+
+    function StoreListController($scope,$routeParams,changeBrowserURL,$location,baseUrlService,getStoreCollectionService){
+      var slc = this;
+      slc.pageNo = 0;
+      slc.storesList = [];
+      slc.getSingleStore = getSingleStore;
+      slc.getStoresCollection = getStoresCollection;
+      slc.storesSearchHeader = $routeParams.slug;
+      activate();
+      $scope.$on('parent', function (event, data) {
+        slc.pageNo = 0;
+        slc.paramData = data;
+        slc.getStoresCollection();
+      });
+      function getSingleStore(store,scrollId){
+        var url = "store/singleStore/"+store._id+"/"+store.myslug;
+        if(scrollId){
+          //url = url + "?scrollId="+scrollId;
+          changeBrowserURL.changeBrowserURLMethod(url,scrollId);
+        }
+        changeBrowserURL.changeBrowserURLMethod(url);
+      }
+      function getStoresCollection(){
+        slc.loading = true;
+        slc.pageNo = slc.pageNo + 1;
+        var location = $routeParams.location;
+        var url ='';
+        if($location.absUrl().indexOf("/category/")!=-1){
+          var category = $routeParams.category;
+           url = 'store/storesCollection/category/'+category+'/'+location+'/'+slc.pageNo;
+        }
+        else if($location.absUrl().indexOf("/storeName/")!=-1){
+          var storeName = $routeParams.storeName;
+           url = 'store/storesCollection/storeName/'+storeName+'/'+location+'/'+slc.pageNo;
+        }
+        else{
+           url = 'store/storesCollection/stores'+'/'+location+'/'+slc.pageNo;
+        }
+        /*
+          * This will work with mongoose-paginate only because the existencce of the button
+            in html is dependant on the total documents retrieved
+          * I check the total documents available to the length of array displayed.. if they both are equal
+            then the button is hidden
+        */
+        getStoreCollectionService.getStoreCollection(url,slc.paramData)
+        .then(function(response){
+          slc.totalStores = response.data.total;
+          console.log(response);
+          if(slc.storesList.length===0){
+            var tempStoreList = [];
+            for (var i = response.data.docs.length - 1; i >= 0; i--) {
+              tempStoreList.push(response.data.docs[i]);
+
+            }
+            slc.storesList = tempStoreList;
+          }
+          else{
+
+            if(slc.paramData&&slc.pageNo==1){
+              slc.storesList = [];
+            }
+            for (var j = response.data.docs.length - 1; j >= 0; j--) {
+              slc.storesList.push(response.data.docs[j]);
+            }
+
+          }
+          slc.loading = false;
+        },function(response){
+          console.log(response);
+        });
+      }
+      function activate(){
+        slc.getStoresCollection();
+      }
+
+    }
+
+})(window.angular);
+
+(function(angular){
+  angular.module('app.store')
+    .controller('StoreLocationCollectionController',["$scope","$routeParams","getCityLocalitiesService","getCityCategoriesService",StoreLocationCollectionController]);
+
+  function StoreLocationCollectionController($scope,$routeParams,getCityLocalitiesService,getCityCategoriesService){
+    var slcc = this;
+    slcc.areaModel = {};
+    slcc.categoryModel = {};
+    slcc.launchFilterEvent = launchFilterEvent;
+    slcc.areaRadioClicked = areaRadioClicked;
+    slcc.categoryRadioClicked = categoryRadioClicked;
+    slcc.majorFilter = {};
+    slcc.clearAreaFilters = clearAreaFilters;
+    slcc.clearCategoryFilters = clearCategoryFilters;
+    function areaRadioClicked(){
+      slcc.majorFilter.area=slcc.areaModel.area;
+      launchFilterEvent(slcc.majorFilter);
+    }
+    function clearAreaFilters(){
+      delete slcc.majorFilter.area;
+      slcc.areaModel = {};
+      launchFilterEvent(slcc.majorFilter);
+    }
+    function categoryRadioClicked(){
+      slcc.majorFilter.category=slcc.categoryModel.category;
+      launchFilterEvent(slcc.majorFilter);
+    }
+    function clearCategoryFilters(){
+      delete slcc.majorFilter.category;
+      slcc.categoryModel = {};
+      launchFilterEvent(slcc.majorFilter);
+    }
+    var location = $routeParams.location;
+    getCityLocalitiesService.getCityLocalities(location)
+      .then(function(res){
+        slcc.areas = res.data;
+      },function(res){
+        
+      });
+      getCityCategoriesService.getCityCategories(location)
+        .then(function(res){
+          slcc.categories = res.data;
+          
+        },function(res){
+          console.log(res);
+        });
+    function launchFilterEvent(obj){
+        $scope.$broadcast('parent', obj);
+    }
+
+  }
+})(window.angular);
+
+(function(angular){
+  angular.module('app.store')
+
+    .controller('StoreNameCollectionController',[storeNameCollectionController]);
+    function storeNameCollectionController(){
+    	
+    }
+})(window.angular);
+
+(function(angular){
+  angular.module('app.store')
+
+    .controller('UserStoreFollowController',["$scope","$auth","$routeParams","userData","userFollowService",UserStoreFollowController]);
+
+    function UserStoreFollowController($scope,$auth,$routeParams,userData,userFollowService){
+      var usu = this;
+      usu.follow = {};
+      usu.followCheck = false;
+      usu.getFollowParamObj = {};
+      usu.submitFollow = submitFollow;
+      usu.deleteFollow = deleteFollow;
+      usu.getFollowParamObj.userId = userData.getUser()._id;
+      usu.userStoreFollowed = false;
+
+      activate();      
+      function userStoreFollowed(){        
+      }
+      function submitFollow(){
+        userFollowService.submitFollow(usu.follow)
+            .then(function(res){
+                    usu.userStoreFollowed = true;
+                    userData.setUser();
+                    
+                  },
+                  function(res){
+                    console.log(res);
+                  });
+      }
+      function deleteFollow(){
+        userFollowService.deleteFollow(usu.follow)
+            .then(function(res){
+              usu.userStoreFollowed = false;
+              userData.setUser();
+              console.log(res);             
+            },
+              function(res)
+              {
+                console.log(res);
+              });
+      }
+      
+      function activate(){
+       
+       usu.follow.userId = userData.getUser()._id;
+        if($routeParams.storeId){
+        usu.entity = $routeParams.storeId;
+        usu.follow.storeId = $routeParams.storeId;
+        
+      }
+      else if($routeParams.productId){
+        usu.entity = $routeParams.productId;
+        usu.follow.productId = $routeParams.productId;
+        usu.getFollowParamObj.productId = $routeParams.productId;
+      }
+      if($auth.isAuthenticated()){
+        if(userData.getUser().storeFollowing.indexOf($routeParams.storeId)!=-1){
+          usu.userStoreFollowed = true;
+        }
+        
+      }
+      }
+
+    }
+
+})(window.angular);
+
+(function(angular){
+  angular.module('app.store')
+
+    .controller('UserStoreUpvoteController',["$scope","$auth","$routeParams","userData","userUpvoteService",'storeData',UserStoreUpvoteController]);
+
+    function UserStoreUpvoteController($scope,$auth,$routeParams,userData,userUpvoteService,storeData){
+      var usu = this;
+      usu.upvote = {};
+      usu.upvoteCheck = false;
+      usu.getUpvoteParamObj = {};
+      usu.submitUpvote = submitUpvote;
+      usu.deleteUpvote = deleteUpvote;
+      usu.getUpvoteParamObj.userId = userData.getUser()._id;
+      usu.userStoreUpvoted = false;
+
+      activate();      
+      function userStoreUpvoted(){        
+      }
+      function submitUpvote(){
+        userUpvoteService.submitUpvote(usu.upvote)
+            .then(function(res){
+                    usu.userStoreUpvoted = true;
+                    userData.setUser();
+                    
+                  },
+                  function(res){
+                    console.log(res);
+                  });
+      }
+      function deleteUpvote(){
+        userUpvoteService.deleteUpvote(usu.upvoteId)
+            .then(function(res){
+              usu.userStoreUpvoted = false;
+              userData.setUser();
+            },
+              function(res)
+              {
+                console.log(res);
+              });
+      }
+      
+      function activate(){
+        usu.upvote.userId = userData.getUser()._id;
+        if($routeParams.storeId){
+          usu.upvote.storeId = $routeParams.storeId;
+          usu.upvote.type="store";
+        }
+        else if($routeParams.productId){
+          usu.upvote.type="product";
+          usu.upvote.productId = $routeParams.productId;
+        
+        }
+        if($auth.isAuthenticated()){
+          var currentStore = storeData.getStore();
+          var currentUser = userData.getUser();
+          for (var i = 0; i < currentStore.upvotes.length; i++) {
+            for (var j = 0; j < currentUser.upvotes.length; j++) {
+              if(currentStore.upvotes[i] == currentUser.upvotes[j]){
+                usu.userStoreUpvoted = true;
+                usu.upvoteId = currentStore.upvotes[i];
+                console.log(usu.upvoteId);
+              }
+            }
+            
+          }
+        }
+      }
+
+    }
+
+})(window.angular);
+
+(function(angular){
+  angular.module('app.store')
+
+    .controller('UserStoreVisitController',["$scope","$auth","$routeParams","userData","userVisitService",UserStoreVisitController]);
+
+    function UserStoreVisitController($scope,$auth,$routeParams,userData,userVisitService){
+      var usv = this;
+      usv.visit = {};
+      usv.visitCheck = false;
+      usv.getVisitParamObj = {};
+      usv.submitVisit = submitVisit;
+      usv.deleteVisit = deleteVisit;
+      usv.getVisitParamObj.userId = userData.getUser()._id;
+      usv.userStoreVisited = false;
+
+      activate();      
+      function userStoreVisited(){        
+      }
+      function submitVisit(){
+        userVisitService.submitVisit(usv.visit)
+            .then(function(res){
+                    userData.setUser();
+                    usv.userStoreVisited = true;
+                  },
+                  function(res){
+                    console.log(res);
+                  });
+      }
+      function deleteVisit(){
+        userVisitService.deleteVisit(usv.visit)
+            .then(function(res){
+              
+              userData.setUser();
+              usv.userStoreVisited = false;
+             
+            },
+              function(res)
+              {
+                console.log(res);
+              });
+      }
+      
+      function activate(){
+       
+       usv.visit.userId = userData.getUser()._id;
+        if($routeParams.storeId){
+        usv.entity = $routeParams.storeId;
+        usv.visit.storeId = $routeParams.storeId;
+        usv.getVisitParamObj.storeId = $routeParams.storeId;
+        
+      }
+      else if($routeParams.productId){
+        usv.entity = $routeParams.productId;
+        usv.visit.productId = $routeParams.productId;
+        usv.getVisitParamObj.productId = $routeParams.productId;
+      }
+      if($auth.isAuthenticated()){
+        userVisitService.getVisit(usv.visit)
+            .then(function(res){
+              
+              
+              if(res.data[0]){
+              if(res.data[0]._id){
+              
+                usv.userStoreVisited = true;
+              }}
+              
+             
+            },
+              function(res)
+              {
+                console.log(res);
+              });
+      }
+      }
+
+    }
+
+})(window.angular);
+
+(function(angular){
+  angular.module('app.store')
+  .directive('filterDirective',["$window","$location", filterDirective])
+  .directive('addClass',["$window","$location", addClassDirective])
+  .directive('removeClass',["$window","$location", removeClassDirective])
+  .directive('siblingRemoveClass',["$window","$location", siblingRemoveClassDirective]);
+  function filterDirective($window,$location) {
+    return {
+      restrict: 'E',
+      templateUrl:'app/store/views/filterDirectiveTemplate.html',
+      scope:{
+        filterName:"@filterName",
+        radioModel:"=radioModel",
+        radioChange:"&radioChange",
+        radioRepeat:"=radioRepeat",
+        clearClick:"&clearClick"
+      },
+      link: function(scope, element, attrs) {
+      }
+    };
+  }
+  function addClassDirective($window,$location) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        $(element).on('click',function(){
+          //$(element).removeClass('highlightClass');
+          $(this).addClass(attrs.addClass);
+
+        });
+
+      }
+    };
+  }
+  function siblingRemoveClassDirective($window,$location) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        $(element).on('click',function(){
+          $(this).siblings().removeClass(attrs.siblingRemoveClass);
+        });
+
+      }
+    };
+  }
+
+  function removeClassDirective($window,$location) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        $(element).on('click',function(){
+          $(this).siblings('.filterDirectiveRadioGroup').find('.filterRadioButton').removeClass(attrs.removeClass);
+        });
+
+      }
+    };
+  }
+
+
+})(window.angular);
+
+(function(angular){
+  angular.module('app.store')
+  .directive('scrollToId',['scrollToIdService',scrollToIdDirective]);
+
+  function scrollToIdDirective(scrollToIdService) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        $(element).on('click',function(){
+          scrollToIdService.scrollToId(attrs.scrollToId);
+        });
+      }
+    };
+  }
+
+
+})(window.angular);
+
+(function(angular){
+  'use strict';
+
+angular.module('app.store')
+  .service('getStoreCollectionService',["$http","storeData","baseUrlService",GetStoreCollectionService]);
+
+/*
+  * This servic has a function to get collection of stores`
+*/
+function GetStoreCollectionService($http,storeData,baseUrlService){
+  this.getStoreCollection = getStoreCollection;
+
+  function getStoreCollection(url,paramData){
+    return $http.get(baseUrlService.baseUrl+url,{params:paramData});
+
+  }
+}
+})(window.angular);
+
+(function(angular){
+  'use strict';
+/*
+  *Service for getting a single store with its id
+*/
+angular.module('app.store')
+  .service('getSingleStore',["$http","storeData","baseUrlService","changeBrowserURL",GetSingleStoreWithId]);
+
+/*
+  * This servic has a function names getStore which takes id as parameter and returns a promise
+*/
+function GetSingleStoreWithId($http,storeData,baseUrlService,changeBrowserURL){
+  this.getStore = getStore;
+  this.getStoreRating = getStoreRating;
+  this.getSingleStorePage = getSingleStorePage;
+  function getStore(id){
+    return $http.get(baseUrlService.baseUrl+"store/singleStore/"+id);
+    
+  }
+  function getStoreRating(id){
+  	return $http.get(baseUrlService.baseUrl+"review/ratings/store/"+id);
+  }
+  function getSingleStorePage(store,scrollId){
+        var url = "store/singleStore/"+store._id+"/"+(store.myslug || ' ');
+        if(scrollId){
+          //url = url + "?scrollId="+scrollId;
+          changeBrowserURL.changeBrowserURLMethod(url,scrollId);
+        }
+        changeBrowserURL.changeBrowserURLMethod(url);
+      }
+
+}
+})(window.angular);
+
+
+
+
+(function(angular){
+  'use strict';
+/*
+  *Service for getting a single store with its id
+*/
+angular.module('app.store')
+  .service('scrollToIdService',[ScrollToIdService]);
+
+/*
+  * This servic has a function names getStore which takes id as parameter and returns a promise
+*/
+function ScrollToIdService(){
+  this.scrollToId = scrollToId;
+
+  function scrollToId(blockId){
+    var container = $('body');
+    console.log('Inside the service of scroll');
+
+    var scrollTo = $('#'+blockId);
+    console.log(scrollTo);
+    container.animate({
+        scrollTop: scrollTo.offset().top //- container.offset().top + container.scrollTop()
+    });
+  }
+}
+})(window.angular);
+
+(function(angular){
+  'use strict';
+
+angular.module('app.store')
+  .factory('storeData',["$window",storeData]);
+
+/*
+  * This factory is used to get store details from window storage
+*/
+function storeData($window) {
+  var storage = $window.localStorage;
+  var obj1 = {
+    setStore: function (store) {
+        storage.setItem('store',JSON.stringify(store));
+    },
+    getStore: function(){
+      return JSON.parse(storage.getItem('store'));
+    },
+    removeStore: function(){
+
+      storage.removeItem('store');
+    }
+  };
+    return obj1;
+  }
+
+
+
+})(window.angular);
+
+(function(angular){
+  'use strict';
+/*
+  *Service for getting a single store with its id
+*/
+angular.module('app.store')
+  .service('userFollowService',["$http","baseUrlService",UserFollowService]);
+
+/*
+  * This servic has a function names getStore which takes id as parameter and returns a promise
+*/
+function UserFollowService($http,baseUrlService){
+  this.submitFollow = submitFollow;
+  this.deleteFollow = deleteFollow;
+  this.getFollow = getFollow;
+
+  function getFollow(followData){
+    return $http.get(baseUrlService.baseUrl+"follow/followed",{"params":followData});
+  }
+
+  function submitFollow(followData){
+    return $http.post(baseUrlService.baseUrl+"store/submitStoreFollow",followData);
+  }
+  function deleteFollow(followObj){
+    return $http.post(baseUrlService.baseUrl+"store/deleteStoreFollow",followObj);
+  }
+}
+})(window.angular);
+
+(function(angular){
+  'use strict';
+/*
+  *Service for getting a single store with its id
+*/
+angular.module('app.store')
+  .service('userUpvoteService',["$http","baseUrlService",UserUpvoteService]);
+
+/*
+  * This servic has a function names getStore which takes id as parameter and returns a promise
+*/
+function UserUpvoteService($http,baseUrlService){
+  this.submitUpvote = submitUpvote;
+  this.deleteUpvote = deleteUpvote;
+  this.getUpvote = getUpvote;
+
+  function getUpvote(upvoteData){
+    return $http.get(baseUrlService.baseUrl+"upvote/upvoted",{"params":upvoteData});
+  }
+
+  function submitUpvote(upvoteData){
+    return $http.post(baseUrlService.baseUrl+"upvote/upvotes/storeUpvote",upvoteData);
+  }
+  function deleteUpvote(upvoteId){
+    return $http.delete(baseUrlService.baseUrl+"upvote/upvotes/"+upvoteId);//{"params":upvoteObj});
+  }
+}
+})(window.angular);
+
+(function(angular){
+  'use strict';
+/*
+  *Service for getting a single store with its id
+*/
+angular.module('app.store')
+  .service('userVisitService',["$http","baseUrlService",UserVisitService]);
+
+/*
+  * This servic has a function names getStore which takes id as parameter and returns a promise
+*/
+function UserVisitService($http,baseUrlService){
+  this.submitVisit = submitVisit;
+  this.deleteVisit = deleteVisit;
+  this.getVisit = getVisit;
+
+  function getVisit(visitData){
+    return $http.get(baseUrlService.baseUrl+"visit/visited",{"params":visitData});
+  }
+
+  function submitVisit(visitData){
+    return $http.post(baseUrlService.baseUrl+"visit/visits/store",visitData);
+  }
+  function deleteVisit(visitObj){
+    return $http.delete(baseUrlService.baseUrl+"visit/visits/",{"params":visitObj});
+  }
 }
 })(window.angular);

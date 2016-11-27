@@ -14,7 +14,8 @@ function SearchBoxController($scope,$http,$routeParams,cityStorage,citiesService
 			hm.selectedItem = cityStorage.getCity();
 		}
 		else{
-			hm.selectedItem = 'hyderabad';
+
+			hm.selectedItem = 'dubai';
 		}
 		activate();
 		hm.userSearches = [];
@@ -25,7 +26,6 @@ function SearchBoxController($scope,$http,$routeParams,cityStorage,citiesService
 
 		hm.selectedItemChange(hm.selectedItem);
 		function userSearchItemChange(item){
-
 
 			var changeEntity = item.userSearchString.split("#&#")[1];
 			var entityName = item.userSearchString.split("#&#")[0];
@@ -70,40 +70,36 @@ function SearchBoxController($scope,$http,$routeParams,cityStorage,citiesService
 				locationStoresSearchUrl();
 			}
 
-
 			changeBrowserURL.changeBrowserURLMethod(hm.url+entityName+"/"+location+"/"+hm.slug);
-			console.log(hm.url+entityName+"/"+location+"/"+hm.slug);
 
 
 		}
 		//md-search-text-change="sbc.searchTextChange(sbc.searchText)"
 		function userSearchTextChange(city,userSearchText){
-			console.log(userSearchText);
-			console.log(city);
 			if(userSearchText.length>=2){
 				searchService.getAjaxSearches(city,userSearchText)
 					.then(function(resource){
 						hm.loading = true;
-				console.log("the resource");
-				console.log(resource);
-				hm.userSearches = [];
-				var allStoresItem = {"userSearchString":"#&#All stores in #&#"+hm.selectedItem};
-				var allProductsItem = {"userSearchString":"#&#All products in #&#"+hm.selectedItem};
-				hm.userSearches = [allStoresItem,allProductsItem];
-				for (var i = resource.data.length - 1; i >= 0; i--) {
-					hm.userSearches.push(resource.data[i]);
-				}
-				hm.loading = false;
+						hm.userSearches = [];
+						var allStoresItem = {"userSearchString":"#&#All stores in #&#"+hm.selectedItem};
+						var allProductsItem = {"userSearchString":"#&#All products in #&#"+hm.selectedItem};
+						hm.userSearches = [allStoresItem,allProductsItem];
+						for (var i = resource.data.length - 1; i >= 0; i--) {
+							hm.userSearches.push(resource.data[i]);
+						}
+						hm.loading = false;
 					});
+			}
+			else{
+				if(hm.selectedItem){
+					selectedItemChange(hm.selectedItem);
+				}
 			}
 		}
 		function selectedItemChange(item){
 			hm.loading = true;
-			//userLocationService.setUserLocation(item);
 			cityStorage.setCity(item);
 			searchService.getSearches(item).then(function(resource){
-				console.log("the resource");
-				console.log(resource);
 				var allStoresItem = {"userSearchString":"#&#All stores in #&#"+hm.selectedItem};
 				var allProductsItem = {"userSearchString":"#&#All products in #&#"+hm.selectedItem};
 				hm.userSearches = [allStoresItem,allProductsItem];

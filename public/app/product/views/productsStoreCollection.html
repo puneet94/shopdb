@@ -1,6 +1,10 @@
 <div  ng-controller="StoreProductListController as splc" style="width:100%;">
   <div class="productContainer" layout="row" layout-wrap layout-align="space-around start">
-    <div class="singleProductContainer" md-whiteframe="1" flex="30"  flex-xs="100" ng-repeat="product in splc.storeProductsList track by product._id">
+    <div class="singleProductContainer" md-whiteframe="1" flex="50"  flex-xs="100" ng-repeat="product in splc.storeProductsList track by product._id">
+
+      <single-product-directive single-product="product"> </single-product-directive>
+
+      <!--
       <img class="singleProductImage" ng-src="{{::product.images[0]}}">
       <div class="productDetailsContainer">
         <div layout="row" layout-align="space-between end">
@@ -25,7 +29,7 @@
             </span>
           </div>
         </div>
-      </div>
+      </div>-->
     </div>
   </div>
 </div>

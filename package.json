@@ -13,11 +13,8 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.1",
     "bower": "1.7.9",
-    "cloudinary": "^1.4.3",
     "compression": "^1.6.2",
-    "connect-multiparty": "^2.0.0",
     "express": "^4.13.4",
-    "gulp": "^3.9.1",
     "jade": "^1.11.0",
     "jsonwebtoken": "^6.2.0",
     "jwt-simple": "^0.5.0",
@@ -27,7 +24,6 @@
     "mongoose-relationship": "^0.1.5",
     "mongoose-url-slugs": "^0.2.1",
     "morgan": "^1.7.0",
-    "multer": "^1.2.0",
     "querystring": "^0.2.0",
     "request": "^2.72.0"
   },
@@ -47,8 +43,7 @@
     "gulp-rename": "1.2.2",
     "gulp-sass": "^2.3.2",
     "gulp-uglify": "1.2.0"
-  },
-  "engines": {
+  },"engines": {
     "node": "4.4.5"
   }
 }
