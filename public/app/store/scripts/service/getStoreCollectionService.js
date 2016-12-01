@@ -11,6 +11,7 @@ function GetStoreCollectionService($http,storeData,baseUrlService){
   this.getStoreCollection = getStoreCollection;
 
   function getStoreCollection(url,paramData){
+  	
     return $http.get(baseUrlService.baseUrl+url,{params:paramData});
 
   }

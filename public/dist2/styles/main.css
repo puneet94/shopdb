@@ -1,21 +1,3 @@
-.capital-heading-text {
-  text-transform: capitalize;
-  font-size: 24px;
-  font-weight: 600;
-  color: #795548; }
-
-.capital-sub-heading-text {
-  text-transform: capitalize;
-  font-size: 16px;
-  font-weight: 600;
-  color: #795548; }
-
-.capital-normal-text {
-  text-transform: capitalize;
-  font-size: 14px;
-  font-weight: 400;
-  color: #795548; }
-
 .adminStoreBannerImage {
   height: 300px;
   width: 100%;
@@ -55,6 +37,24 @@
   .storeImagesList li {
     display: inline;
     margin: 2px; }
+
+.capital-heading-text {
+  text-transform: capitalize;
+  font-size: 24px;
+  font-weight: 600;
+  color: #795548; }
+
+.capital-sub-heading-text {
+  text-transform: capitalize;
+  font-size: 16px;
+  font-weight: 600;
+  color: #795548; }
+
+.capital-normal-text {
+  text-transform: capitalize;
+  font-size: 14px;
+  font-weight: 400;
+  color: #795548; }
 
 
 .tabsContent {
@@ -673,7 +673,7 @@ md-ink-bar {
   z-index: 99999999999; }
 
 .storeImageContent {
-  margin-top: 35px;
+  margin-top: 20px;
   background-color: #fafafa;
   border: 1px solid #e7e7e7;
   border-radius: 1px;
@@ -746,6 +746,40 @@ md-ink-bar {
 
 .storePageStatsNav md-divider {
   border-right-width: 3px; }
+
+.storeSuggestionsContainer {
+  margin-top: 20px;
+  margin-left: 15px;
+  background-color: white;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 5px; }
+  .storeSuggestionsContainer .storeSuggestionHeader {
+    margin-top: 5px;
+    margin-bottom: 10px; }
+  .storeSuggestionsContainer .singleStoreSuggestion {
+    width: 100%;
+    margin-bottom: 10px; }
+    .storeSuggestionsContainer .singleStoreSuggestion .suggestedStoreImage {
+      width: 100%; }
+      .storeSuggestionsContainer .singleStoreSuggestion .suggestedStoreImage img {
+        width: 100%;
+        height: 100px;
+        border: 1px solid #eee;
+        border-radius: 5px; }
+    .storeSuggestionsContainer .singleStoreSuggestion .suggestedStoreInfo {
+      padding: 0 5px;
+      word-wrap: break-word; }
+      .storeSuggestionsContainer .singleStoreSuggestion .suggestedStoreInfo a {
+        text-decoration: none; }
+      .storeSuggestionsContainer .singleStoreSuggestion .suggestedStoreInfo .suggestedStoreName {
+        text-transform: capitalize;
+        margin-top: 0px;
+        margin-bottom: 0; }
+      .storeSuggestionsContainer .singleStoreSuggestion .suggestedStoreInfo .suggestedStoreAddress {
+        margin-top: 2px;
+        font-size: 12px;
+        margin-bottom: 0; }
 
 .storeDetailsContainer {
   padding: 10px; }
