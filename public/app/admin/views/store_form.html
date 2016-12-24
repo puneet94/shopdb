@@ -1,188 +1,126 @@
 <div class="layout-column flex">
-   
-   <form name="storeForm" class="" style="" novalidate>
-      
-      <!--
-      <button class="imageUploadClick" type="file" ngf-select="csc.uploadSingleImage($file, $invalidFiles)"
-          accept="image/*" ngf-max-height="1000" ngf-max-size="1MB">
-      Upload Banner Image</button>
-      <div style="width:100px;height:100px;">
-         <img ng-src="{{csc.storeForm.bannerImage}}" style="width:100%;height:100%;">
-      </div>-->
-      
-      <div >
-        <div layout="row" layout-align="space-between center">
-         <h2>Images</h2>
-         <div>
-            <button ngf-select="csc.uploadMultipleImages($files)" multiple accept="image/*">Upload Images</button>
-            <br>
-
-            {{csc.errorMsg}}
-         </div>
+    
+    <div layout="row">
+        <div style="background: #FFF;" md-whiteframe="2">
+            <form name="storeForm">
+                <div class="storeIntroSection">
+                    <h3 class="formSectionHeaders">Store Details</h3>
+                    <div layout="row" layout-align="space-around" layout-wrap layout-margin>
+                        <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                            <label class="formEntityLabel" for="storeName">Name</label>
+                            <input class="formEntityInput" ng-model="csc.storeForm.name" type="text" name="storeName" required="required" />
+                            <div ng-messages="" style="">
+                                <div ng-message="required" class="" style="">This field is required</div>
+                            </div>
+                        </div>
+                        <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                            <label class="formEntityLabel" for="storePhone">Phone</label>
+                            <input class="formEntityInput" type="tel" ng-model="csc.storeForm.phone" name="storePhone" />
+                        </div>
+                        <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                            <md-button class="md-raised md-primary" type="file" ngf-select="csc.uploadSingleImage($file, $invalidFiles)" accept="image/*" ngf-max-height="5000" ngf-max-size="10MB">
+                                Upload banner Image
+                            </md-button>
+                            <inner-loading-directive inner-loading="csc.formBannerLoading" container-height="100px"></inner-loading-directive>
+                            <div style="width:90px;height:90px;" ng-if="csc.storeForm.bannerImage || csc.uploadedImage">
+                                <img ng-src="{{csc.storeForm.bannerImage || csc.uploadedImage}}" style="width:100%;height:100%;">
+                            </div>
+                        </div>
+                        <div flex="45" flex-sm="100" flex-xs="100" class="formEntity">
+                            <div>
+                                <md-button class="md-raised md-primary" ngf-select="csc.uploadMultipleImages($files)" multiple accept="image/*">Upload Images</md-button>
+                                {{csc.errorMsg}}
+                            </div>
+                            <inner-loading-directive inner-loading="csc.formImgListLoading" container-height="100px"></inner-loading-directive>
+                            <div layout="row" class="storeImagesCollection">
+                                <images-list-directive images-list="csc.storeForm.storeImages"></images-list-directive>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="storeAddressSection">
+                    <h3 class="formSectionHeaders">Address</h3>
+                    <div class="storeAddressForm">
+                        <div layout="row" layout-align="space-around" layout-wrap layout-margin>
+                            <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                                <label class="formEntityLabel" for="addressDoor">Door/Plot No.</label>
+                                <input class="formEntityInput" type="text" name="addressDoor" ng-model="csc.storeForm.address.doorNo" />
+                            </div>
+                            <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                                <label class="formEntityLabel" for="addressLandmark">Landmark</label>
+                                <input class="formEntityInput" type="text" name="addressLandmark" ng-model="csc.storeForm.address.landmark" />
+                            </div>
+                            <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                                <label class="formEntityLabel" for="addressArea">Area</label>
+                                <input class="formEntityInput" type="text" name="addressDoor" ng-model="csc.storeForm.address.area" />
+                            </div>
+                            <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                                <label class="formEntityLabel" for="addressLocality">Locality</label>
+                                <input class="formEntityInput" type="text" name="addressLocality" ng-model="csc.storeForm.address.locality" />
+                            </div>
+                            <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                                <label class="formEntityLabel" for="addressCity">City</label>
+                                <input class="formEntityInput" ng-model="csc.storeForm.address.city" type="text" name="addressCity" />
+                            </div>
+                            <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                                <label class="formEntityLabel" for="addressState">State</label>
+                                <input class="formEntityInput" type="text" name="addressState" ng-model="csc.storeForm.address.state"/>
+                            </div>
+                            <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                                <label class="formEntityLabel" for="addressPincode">Pincode</label>
+                                <input class="formEntityInput" type="text" name="addressPincode" ng-model="csc.storeForm.address.pincode"/>
+                            </div>
+                            <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                                <label class="formEntityLabel" for="addressCountry">Country</label>
+                                <input class="formEntityInput" type="text" name="addressCountry" ng-model="csc.storeForm.address.country" />
+                            </div>
+                            <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                                <label class="formEntityLabel" for="addressLatitude">Latitude</label>
+                                <input class="formEntityInput" type="text" name="addressLatitude" ng-model="csc.storeForm.address.latitude"/>
+                            </div>
+                            <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                                <label class="formEntityLabel" for="addressLongitude">Longitude</label>
+                                <input class="formEntityInput" type="text" name="addressLongitude" ng-model="csc.storeForm.address.longitude" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="storeInfoSection">
+                    <h3 class="formSectionHeaders">Information</h3>
+                    <div class="storeInformationForm">
+                        <div layout="row" layout-align="space-around" layout-wrap layout-margin>
+                            <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                                <label class="formEntityLabel" for="storeCategory">Category<small>(Press enter to separate multiples)</small></label>
+                                <div>
+                                    <md-chips class="chipLook" ng-model="csc.storeForm.category" name="storeCategory" readonly="false" md-removable="true" md-max-chips="15">
+                                        <md-chip-template>
+                                            <strong>{{$chip}}</strong>
+                                        </md-chip-template>
+                                    </md-chips>
+                                </div>
+                                <div class="errors" ng-messages="storeForm.storeCategory.$error">
+                                    <div ng-message="md-max-chips">The maxmium of chips is reached.</div>
+                                </div>
+                            </div>
+                            <div class="formEntity" flex="45" flex-sm="100" flex-xs="100">
+                                <label class="formEntityLabel" for="storeSubCategory">Sub-Category<small>(Press enter to separate multiples)</small></label>
+                                <div>
+                                    <md-chips class="chipLook" ng-model="csc.storeForm.subCategory" name="storeSubCategory" readonly="false" md-removable="true" md-max-chips="5">
+                                        <md-chip-template>
+                                            <strong>{{$chip}}</strong>
+                                        </md-chip-template>
+                                    </md-chips>
+                                </div>
+                                <div class="errors" ng-messages="storeForm.storeSubCategory.$error">
+                                    <div ng-message="md-max-chips">The maxmium of chips is reached.</div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <md-button ng-click="csc.createStore()" class="md-raised md-primary md-button" type="submit">Submit</md-button>
+            </form>
         </div>
-        <div layout="row" class="storeImagesCollection">
-          <images-list-directive images-list="csc.storeForm.storeImages"></images-list-directive>  
-        </div>
-        
-      </div>
-      
-      <div class="formItem  layout-column" >
-         <div>
-            <md-input-container >
-               <label >Store Name</label>
-               <input ng-model="csc.storeForm.name" type="text"  id="input_2"   required="required" style="">
-               <div ng-messages=""  style="">
-                  <!-- ngMessage: required -->
-                  <div ng-message="required" class="" style="">This field is required</div>
-               </div>
-            </md-input-container>
-         </div>
-         <div>
-
-            <div class="formItem-help-text">For multiple separate by comma Ex: sports, fashion etc</div>
-
-                  <md-input-container >
-                     <label >Category</label>
-                     <md-chips ng-model="csc.storeForm.category" name="categoryName" readonly="false" md-removable="true" md-max-chips="10" placeholder="Press enter after each word">
-                 <md-chip-template>
-                   <strong>{{$chip}}</strong>
-                   
-                 </md-chip-template>
-               </md-chips>
-
-               <div class="errors" ng-messages="storeForm.categoryName.$error">
-                 <div ng-message="md-max-chips">The maxmium of chips is reached.</div>
-               </div>
-
-                     <!--<input  type="text" id="input_16" required="required" style="">-->
-                     <div ng-messages="InputView.form.$error" >
-
-                        <div ng-message="required" class="" style="">This field is required</div>
-                     </div>
-                  </md-input-container>
-         </div>
-         <div>
-            <div class="formItem-help-text ">any specific product type you sell</div>
-            <md-input-container >
-               <label >Sub Category</label>
-
-               <md-chips ng-model="csc.storeForm.subCategory" name="subCategoryName" readonly="false" md-removable="true" md-max-chips="10" placeholder="Press enter after each word">
-                 <md-chip-template>
-                   <strong>{{$chip}}</strong>
-                   
-                 </md-chip-template>
-               </md-chips>
-
-               <div class="errors" ng-messages="storeForm.subCategoryName.$error">
-                 <div ng-message="md-max-chips">The maxmium of chips is reached.</div>
-               </div>
-
-               <!--<input ng-model="csc.storeForm.subCategory" type="text" />-->
-               <div ng-messages="InputView.form.$error" style="">
-                  <!-- ngMessage: required -->
-               </div>
-            </md-input-container>
-
-            <!-- end ngSwitchWhen: --><!-- ngSwitchWhen: textarea --><!-- ngSwitchWhen: matrix -->
-         </div>
-         <div>
-            <md-input-container >
-               <label >City</label>
-               <input  type="text" ng-model="csc.storeForm.address.city" required>
-               <div ng-messages="InputView.form.$error" >
-                  <!-- ngMessage: required -->
-                  <div ng-message="required" class="" style="">This field is required</div>
-               </div>
-            </md-input-container>
-         </div>
-         <div>
-            <md-input-container >
-               <label >Phone</label>
-               <input  type="phone" ng-model="csc.storeForm.phone">
-               <div ng-messages="InputView.form.$error" >
-                  <!-- ngMessage: required -->
-               </div>
-            </md-input-container>
-         </div>
-         <div>
-
-            <div class="formItem-help-text ">Ex:Dilsukhnagar, Malakpet</div>
-
-            <md-input-container >
-               <label>Area</label>
-               <input  type="text"  ng-model="csc.storeForm.address.area" required="required">
-               <div ng-messages="InputView.form.$error" >
-                  <!-- ngMessage: required -->
-                  <div ng-message="required" class="" style="">This field is required</div>
-               </div>
-            </md-input-container>
-         </div>
-         <div>
-            <div class="formItem-help-text ">Ex: Colony name or street name</div>
-
-            <md-input-container >
-               <label >Locality</label>
-               <input  type="text" ng-model="csc.storeForm.address.locality" required="required" style="">
-               <div ng-messages="InputView.form.$error" >
-                  <!-- ngMessage: required -->
-                  <div ng-message="required" class="" style="">This field is required</div>
-               </div>
-            </md-input-container>
-         </div>
-         <div>
-
-            <div class="formItem-help-text ">Ex: 1-456/789</div>
-
-            <md-input-container >
-               <label >Door No.</label>
-               <input  type="text" ng-model="csc.storeForm.address.doorNo" />
-               <div ng-messages="InputView.form.$error" >
-                  <!-- ngMessage: required -->
-               </div>
-            </md-input-container>
-         </div>
-         <div>
-            <md-input-container >
-               <label >State</label>
-               <input  type="text"  id="input_79" ng-model="csc.storeForm.address.state" >
-               <div ng-messages="InputView.form.$error" >
-                  <!-- ngMessage: required -->
-               </div>
-            </md-input-container> 
-         </div>
-         <div>
-            <div class="formItem-help-text ">A brief description about your store</div>
-
-            <md-input-container  >
-               <label >Description</label>
-               <textarea ng-model="csc.storeForm.description"  rows="1" aria-multiline="true" ></textarea>
-               <div ng-messages="TextareaView.form.$error" >
-                  <!-- ngMessage: required -->
-               </div>
-            </md-input-container>  
-         </div>
-         <div>
-
-            <div class="formItem-help-text">List of words which describe your store. Separate by commas</div>
-               <md-input-container  >
-                  <label >Keywords</label>
-                  <textarea ng-model="csc.storeForm.keywords"   rows="1" aria-multiline="true" ></textarea>
-                  <div ng-messages="TextareaView.form.$error" >
-                     <!-- ngMessage: required -->
-                  </div>
-               </md-input-container>
-            </div>
-         <div>
-            <div class="formItem-title ">Country</div>           
-            <md-input-container >
-               <label ></label><input  type="text"  ng-model="csc.storeForm.address.country">
-               <div ng-messages="InputView.form.$error" >
-                  <!-- ngMessage: required -->
-               </div>
-            </md-input-container>
-         </div>
-         
-      </div>
-      <md-button ng-click="csc.createStore()" class="md-raised md-primary md-button" type="submit">Submit</md-button>
-   </form>
+    </div>
 </div>

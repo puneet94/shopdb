@@ -2,9 +2,9 @@
 	'use strict';
 
 	angular.module('app.home')
-	.controller('HeaderController',["$scope","userData","changeBrowserURL","$auth","$mdDialog", "$mdMedia","$timeout", "$mdSidenav", "$log",HeaderController]);
+	.controller('HeaderController',["$scope","userData","changeBrowserURL","$auth","$mdDialog", "$mdMedia","$timeout", "$mdSidenav", HeaderController]);
 
-	function HeaderController($scope,userData,changeBrowserURL,$auth,$mdDialog, $mdMedia,$timeout, $mdSidenav, $log){
+	function HeaderController($scope,userData,changeBrowserURL,$auth,$mdDialog, $mdMedia,$timeout, $mdSidenav){
 			var phc = this;
 			phc.toHomePage = toHomePage;
 			phc.authenticate = authenticate;
@@ -12,6 +12,7 @@
 			phc.showAdvanced = showAdvanced;
 			phc.customFullscreen = undefined;
 			phc.isAuth = $auth.isAuthenticated();
+			
 			phc.isOpenLeft = function(){
 	      return $mdSidenav('left').isOpen();
 	    };
@@ -23,7 +24,7 @@
 	        $mdSidenav(navID)
 	          .toggle()
 	          .then(function () {
-	            $log.debug("toggle " + navID + " is done");
+	            console.log("toggle " + navID + " is done");
 	          });
 	      };
 	    }

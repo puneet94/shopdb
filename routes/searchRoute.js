@@ -12,11 +12,10 @@ searchRouter.use(function(req,res,next){
 searchRouter.route('/searches/:location_name')
 	.get(function(req,res){
 		var city = req.params.location_name.toLowerCase();
-		UserSearch.find({ 'location':city  })
+		UserSearch.find({ 'location':city,'userSearchString': new RegExp('#store#|#product#', "i")  })
 					.select('userSearchString -_id')
 					.limit(20).exec(function(err,searches){
 			if(err){
-				console.log("--------");
 				console.log(err);
 				res.send(err);
 			}
@@ -33,11 +32,10 @@ searchRouter.route('/searches/:location_name/:partial')
 		console.log(partial);
 		UserSearch.find({ 'location':city ,'userSearchString': new RegExp(partial, "i")},'userSearchString -_id',function(err,searches){
 			if(err){
-				console.log("--------");
 				console.log(err);
 				res.send(err);
 			}
-			console.log(searches);
+			
 			res.json(searches);
 		})
 	})

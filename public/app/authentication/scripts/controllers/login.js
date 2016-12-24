@@ -9,9 +9,9 @@
  * Controller of the authModApp
  */
 angular.module('authModApp')
-  .controller('LoginController', ["$location","$window","$auth","userData","baseUrlService",LoginCtrl]);
+  .controller('LoginController', ["$location","$window","$auth","userData","baseUrlService",'Socket',LoginCtrl]);
 
-  function LoginCtrl($location,$window,$auth,userData,baseUrlService) {
+  function LoginCtrl($location,$window,$auth,userData,baseUrlService,Socket) {
     var logCl = this;
     logCl.user = {};
     logCl.submitLogin = submitLogin;
@@ -22,6 +22,15 @@ angular.module('authModApp')
       $location.path("/");
 
     };
+    function socketStart() {
+        if($auth.isAuthenticated()){
+            Socket.on("connect", function() {
+                
+                Socket.emit('addToSingleRoom', { 'roomId': userData.getUser()._id });
+            });
+        }
+          
+        }
     function signUp(){
       $location.path("/signup");
     }
@@ -32,6 +41,7 @@ angular.module('authModApp')
 
           userData.setUser(response.data.user);    
           alert("Login successfull");
+          //socketStart();
           window.history.back();
     		},function(response){
     			console.log(response);

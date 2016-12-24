@@ -19,16 +19,17 @@ function createProduct(req, res){
   var address = {};
   var price = {};
   item = req.body;
-  product.name = item.name;
+  product.name = item.name.toLowerCase();
+  product.quantity = item.quantity;
   product.description = item.description;
-  product.category = item.category.toLowerCase().split(',');
+  product.category = item.category.map(function(item){return item.toLowerCase();});
   product.bannerImage = item.bannerImage;
   product.productImages = item.productImages;
-  product.subCategory = item.subCategory.toLowerCase().split(',');
+  product.subCategory = item.subCategory.map(function(item){return item.toLowerCase();});
   price.value = item.price.value;
   price.currency = item.price.currency||'INR';
   product.price = price;
-  product.sizesAvailable=item.sizesAvailable;
+  //product.sizesAvailable=item.sizesAvailable;
   product.store = req.params.storeId;
   Store.findById(req.params.storeId,function(err,store){
     if(err){
@@ -84,16 +85,29 @@ function updateProduct(req, res){
     }
     else {
       item = req.body;
-      product.name = item.name;
+      product.name = item.name.toLowerCase();
       product.description = item.description;
-      product.category = item.category.split(',');
-      product.subCategory = item.subCategory.split(',');
+      product.category = item.category.map(function(item){return item.toLowerCase();});
+      product.subCategory = item.subCategory.map(function(item){return item.toLowerCase();});
       price.value = item.price.value;
       price.currency = item.price.currency||'INR';
       product.price = price;
-      product.sizesAvailable=item.sizesAvailable;
-      product.save(function (err, result) {
-        res.json(result);
+      //product.sizesAvailable=item.sizesAvailable;
+      product.save(function (error, result) {
+        if (error){
+          console.log("error" + error);
+        }
+        else{
+          common.saveSearchList(product.name.toLowerCase(),"product",product.address.city.toLowerCase(),req,res);
+          for (var i = 0;i<product.category.length; i++) {
+            common.saveSearchList(product.category[i].toLowerCase(),"product-category",product.address.city.toLowerCase(),req,res);
+          };
+          for (var j = 0;j<product.subCategory.length; j++) {
+            common.saveSearchList(product.subCategory[j].toLowerCase(),"product-subcategory",product.address.city.toLowerCase(),req,res);
+          };
+          
+          res.json(result);
+        }
       });
     }
   });

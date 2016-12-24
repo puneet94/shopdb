@@ -9,6 +9,7 @@ angular.module('app.product')
       plc.getSingleProduct = getSingleProduct;
       plc.getProductsCollection = getProductsCollection;
       plc.productsSearchHeader = $routeParams.slug;
+      console.log("inside product");
       activate();
       $scope.$on('parent', function (event, data) {
         plc.pageNo = 0;
@@ -37,13 +38,17 @@ angular.module('app.product')
            url = 'product/products/subCategory/'+productSubCategory+'/'+location+'/'+plc.pageNo;
         }
         else if($location.absUrl().indexOf("/productsCollectionName/")!=-1){
+
           var productName = $routeParams.productName;
            url = 'product/products/name/'+productName+'/'+location+'/'+plc.pageNo;
+           //plc.paramData = {'limit':10};
         }
         else if($location.absUrl().indexOf("/productsCollectionLocation/")!=-1){
           
            url = 'product/products/location'+'/'+location+'/'+plc.pageNo;
         }
+
+
         /*
           * This will work with mongoose-paginate only because the existencce of the button
             in html is dependant on the total documents retrieved

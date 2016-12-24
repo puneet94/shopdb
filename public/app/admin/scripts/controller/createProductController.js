@@ -1,17 +1,21 @@
 (function(angular){
   angular.module('app.admin')
 
-    .controller('CreateProductController',['$routeParams','adminProductService','Upload','baseUrlService',CreateProductController]);
-    function CreateProductController($routeParams,adminProductService,Upload,baseUrlService){
+    .controller('CreateProductController',['$routeParams','$timeout','$route','adminProductService','Upload','baseUrlService','$mdDialog',CreateProductController]);
+    function CreateProductController($routeParams,$timeout,$route,adminProductService,Upload,baseUrlService,$mdDialog){
     	var csc = this;
     	csc.productForm = {};
-        csc.productForm.price = {};
+      csc.productForm.price = {};
+      csc.productForm.category = [];
+      csc.productForm.subCategory = [];
+      csc.productForm.productImages = [];
     	activate();
     	csc.createProduct = createProduct;
 
         csc.uploadMultipleImages = function (files) {
         csc.files = files;
         angular.forEach(files, function(file) {
+          csc.formImgListLoading = true;
             file.upload = Upload.upload({
                 url: baseUrlService.baseUrl+'upload/singleUpload',
                 data: {file: file}
@@ -20,8 +24,9 @@
             file.upload.then(function (response) {
                 $timeout(function () {
                     file.result = response.data;
-                    console.log(response.data);
+                    
                     csc.productForm.productImages.push(response.data);
+                    csc.formImgListLoading = false;
                 });
             }, function (response) {
                 if (response.status > 0)
@@ -33,22 +38,24 @@
         });
         
     };
-        csc.uploadProductImage = function(file, errFiles) {
+        csc.uploadSingleImage = function(file, errFiles) {
           console.log("Enterd file uploading");
           csc.f = file;
           csc.errFile = errFiles && errFiles[0];
           if (file) {
+              csc.formBannerLoading = true;
               file.upload = Upload.upload({
                   url: baseUrlService.baseUrl+'upload/singleUpload',
                   data: {file: file}
               });
-              csc.spinnerLoading = true;
+              
               file.upload.then(function (response) {
                   
                       file.result = response.data;
                       csc.productForm.bannerImage = response.data;
                       console.log(response.data);
                       $('.productMainImage').css('background-image','url('+response.data+')');
+                      csc.formBannerLoading = false;
                       
               });
           }
@@ -57,8 +64,17 @@
     	function createProduct(){
     		adminProductService.createProduct(csc.productForm,$routeParams.storeId)
 	    		.then(function(response){
-	    			console.log(response);
-	    			alert("product created");
+	    			
+	    			$mdDialog.show(
+                        $mdDialog.alert()
+                        .clickOutsideToClose(true)
+                        .title('Product created')
+                        .textContent('Your Product has been created.')
+                        .ariaLabel('Alert Dialog Demo')
+                        .ok('Got it!')
+                        
+                    );
+            $route.reload();
 	    		},function(response){
 	    			console.log(response);
 	    		});	

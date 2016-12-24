@@ -1,0 +1,39 @@
+<header layout="row">
+    <div ng-include="'app/home/pageHeader.html'" flex></div>
+</header>
+<div ng-include="'app/home/searchBox.html'"></div>
+<div layout="row" layout-xs="column" layout-sm="column">
+    <div flex="20" hide show-gt-sm>
+        
+            <div ng-include="'app/chat/views/chatRoomList.html'"></div>      
+        
+      
+    </div>
+    <div flex="50" flex-sm="100" flex-xs="100">
+        <div ng-cloak class="chatBoxPage" md-whiteframe="3">
+        <inner-loading-directive inner-loading="cbc.innerLoading" container-height="200px"></inner-loading-directive>
+            <ul class="chatBoxUL">
+                <li ng-repeat="chat in cbc.chatList" ng-class="chat.user._id==cbc.currentUser ? 'rightChat':'leftChat' ">
+                    <div ng-class=" chat.user._id==cbc.currentUser ? 'you' : 'me'">
+                        <div class="image">
+                            <img ng-src="{{chat.user.picture}}" alt="" />
+                        </div>
+                        <p>{{chat.message}}</p>
+                    </div>
+                </li>
+            </ul>
+            <div style="clear:both;position: relative;" class="msgBox" >
+                <div style="text-align:center;margin-left:50%;position:absolute;">
+                    <small-loading-directive small-loading="cbc.messageLoading"></small-loading-directive>        
+                </div>
+                
+                <div layout="row" layout-align="space-between center">
+                    <textarea class="chatBoxTextArea" ng-model="cbc.myMsg" ng-disabled="cbc.messageLoading"  ng-keypress="cbc.sendMsg($event)"></textarea>
+                <md-button class="md-raised md-primary" ng-click="cbc.clickSubmit()">Send      </md-button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div flex="30" hide show-gt-sm>whatever</div>
+</div>

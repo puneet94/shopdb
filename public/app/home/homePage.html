@@ -1,13 +1,14 @@
 
-<div class="homePageDiv">
+<!--<div class="homePageDiv">
 
   <header layout="row">
      <div ng-include="'app/home/pageHeader.html'" flex></div>
   </header>
+  <div ng-include="'app/home/views/mobileHomePage.html'" flex></div>
   <main>
      <div layout="row">
-        <div class="search-banner" layout="column" layout-align="center center" >
-          <div class="dark-mask-absolute"></div>
+        <div class="search-banner" layout="column" layout-align="center center" image-replacement-directive='https://www.ultimatedesignertoolkit.com/wp-content/uploads/2015/11/Background_5.jpg' >
+          
           <div layout="row" layout-align="center center">
               <div class="search-content">
                  <div class="content-header md-title">
@@ -21,8 +22,8 @@
         </div>
      </div>
     <div layout="row" layout-xs="column" layout-sm="column" layout-wrap>
-     <div flex="20" flex-xs="100" flex-sm="100">
-       <!--<div ng-include="'app/home/storeCategoryList.html'"></div>-->
+     <div flex="20" flex-xs="100" flex-sm="100" hide show-gt-sm>
+        <div ng-include="'app/home/storeCategoryList.html'"></div>
      </div>
      <div flex="50" flex-xs="100" flex-sm="100">
         <md-content class="md-padding">
@@ -55,8 +56,16 @@
 
        
      </div>
-     <div flex="20" flex-xs="100" flex-sm="100"><!--Most reviewed--></div>
+     <div flex="20" flex-xs="100" flex-sm="100"></div>
      </div>
 
   </main>
+</div>-->
+
+
+<div  hide show-gt-xs ng-include="'app/home/views/desktopHomePage.html'">
+  
+</div>
+<div hide-gt-xs ng-include="'app/home/views/mobileHomePage.html'">
+  
 </div>
